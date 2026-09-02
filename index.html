@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SportX Chile - Tienda online de indumentaria, calzado y equipamiento deportivo.">
+  <title>SportX Chile | Tienda Deportiva Online</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Hoja de estilos externa personalizada -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+  <!-- ENCABEZADO Y BARRA SUPERIOR DE NAVEGACIÓN -->
+  <header class="sticky-top bg-white shadow-sm">
+    <!-- Barra superior auxiliar: Enlaces de autenticación -->
+    <div class="border-bottom bg-body-tertiary py-1">
+      <div class="container d-flex justify-content-between align-items-center small">
+        <span class="text-muted d-none d-md-inline">
+          <i class="bi bi-geo-alt me-1"></i>Envíos a todo Chile | Despacho express en RM
+        </span>
+        <div class="ms-auto">
+          <a href="login.html" class="text-decoration-none text-dark me-3">
+            <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar sesión
+          </a>
+          <a href="registro.html" class="text-decoration-none text-dark me-3">
+            <i class="bi bi-person-plus me-1"></i>Registrar usuario
+          </a>
+          <a href="admin/index.html" class="text-decoration-none text-primary fw-semibold">
+            <i class="bi bi-speedometer2 me-1"></i>Panel Admin
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menú de navegación principal -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+      <div class="container">
+        <!-- Logo de la marca -->
+        <a class="navbar-brand d-flex align-items-center fw-bold fs-3 text-dark text-uppercase tracking-wider" href="index.html">
+          <i class="bi bi-lightning-charge-fill text-danger me-2"></i>Sport<span class="text-danger">X</span>
+        </a>
+
+        <!-- Botón toggle para dispositivos móviles -->
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false" aria-label="Alternar navegación">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Enlaces del menú principal -->
+        <div class="collapse navbar-collapse" id="menuNavegacion">
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold text-uppercase small">
+            <li class="nav-item">
+              <a class="nav-link active text-danger" aria-current="page" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-secondary" href="productos.html">Productos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-secondary" href="nosotros.html">Nosotros</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-secondary" href="blogs.html">Blogs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-secondary" href="contacto.html">Contacto</a>
+            </li>
+          </ul>
+
+          <!-- Botón interactivo del carrito de compras con contador -->
+          <div class="d-flex align-items-center">
+            <a href="carrito.html" class="btn btn-outline-dark position-relative rounded-pill px-3 py-2">
+              <i class="bi bi-cart3 me-1"></i> Cart
+              <span id="cart-badge-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                0
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="flex-grow-1">
+
+    <!-- SECCIÓN 1: HERO / BANNER PRINCIPAL -->
+    <section class="py-5 bg-white border-bottom">
+      <div class="container">
+        <div class="row align-items-center gy-4">
+          <div class="col-lg-6 text-center text-lg-start">
+            <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-bold text-uppercase mb-3">
+              Temporada 2026
+            </span>
+            <h1 class="display-4 fw-black text-dark lh-1 mb-3">
+              TIENDA ONLINE DEPORTIVA
+            </h1>
+            <p class="lead text-muted mb-4">
+              Equipamiento técnico para boxeo, functional training, calzado especializado y accesorios diseñados para maximizar tu rendimiento atlético.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-3">
+              <a href="productos.html" class="btn btn-danger btn-lg px-4 py-2 rounded-pill fw-semibold shadow-sm">
+                <i class="bi bi-grid-fill me-2"></i>Ver productos
+              </a>
+              <a href="blogs.html" class="btn btn-outline-secondary btn-lg px-4 py-2 rounded-pill fw-semibold">
+                Consejos de entrenamiento
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="position-relative overflow-hidden rounded-4 shadow-sm border">
+              <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1000&q=80" class="img-fluid w-100 object-fit-cover" style="height: 380px;" alt="Entrenamiento deportivo de alto rendimiento">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: BENEFICIOS CLAVE -->
+    <section class="py-4 bg-body-tertiary border-bottom">
+      <div class="container">
+        <div class="row g-4 text-center">
+          <div class="col-md-4">
+            <div class="d-flex align-items-center justify-content-center gap-3">
+              <i class="bi bi-truck fs-2 text-danger"></i>
+              <div class="text-start">
+                <h6 class="mb-0 fw-bold">Despacho Nacional</h6>
+                <small class="text-muted">Envíos rápidos vía Starken y Chilexpress</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="d-flex align-items-center justify-content-center gap-3">
+              <i class="bi bi-shield-check fs-2 text-danger"></i>
+              <div class="text-start">
+                <h6 class="mb-0 fw-bold">Garantía Directa</h6>
+                <small class="text-muted">6 meses en todo el equipamiento técnico</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="d-flex align-items-center justify-content-center gap-3">
+              <i class="bi bi-arrow-repeat fs-2 text-danger"></i>
+              <div class="text-start">
+                <h6 class="mb-0 fw-bold">Cambio Sin Complicaciones</h6>
+                <small class="text-muted">30 días continuos para cambio de talla</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: CATÁLOGO DESTACADO (RENDERIZADO DINÁMICO) -->
+    <section class="py-5">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+          <div>
+            <h2 class="h3 fw-bold text-dark mb-1">Productos Destacados</h2>
+            <p class="text-muted mb-0">Selección de indumentaria y accesorios disponibles para compra inmediata</p>
+          </div>
+          <a href="productos.html" class="btn btn-sm btn-outline-danger fw-semibold d-none d-sm-inline-block">
+            Ver catálogo completo <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+
+        <!-- Grilla de productos (inyectada por catalog.js o fallback accesible) -->
+        <div id="contenedor-productos-destacados" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+          <!-- Tarjeta de Producto 1 (Boxeo) -->
+          <div class="col">
+            <article class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden tarjeta-producto">
+              <div class="position-relative bg-white text-center p-3">
+                <span class="badge bg-dark position-absolute top-0 start-0 m-3">Boxeo</span>
+                <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&w=600&q=80" class="card-img-top img-fluid rounded" style="height: 200px; object-fit: cover;" alt="Guantes de Boxeo Pro Leather 14oz">
+              </div>
+              <div class="card-body d-flex flex-column p-3">
+                <h3 class="card-title h6 fw-bold mb-1">
+                  <a href="producto-detalle.html?id=PROD-001" class="text-decoration-none text-dark stretched-link">
+                    Guantes de Boxeo Pro Leather 14oz
+                  </a>
+                </h3>
+                <small class="text-muted mb-2">Cuero reforzado y triple amortiguación</small>
+                <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
+                  <span class="fs-5 fw-bold text-danger">$34.990</span>
+                  <button type="button" class="btn btn-sm btn-outline-dark position-relative z-2" onclick="agregarAlCarrito('PROD-001', 1)" aria-label="Añadir al carrito">
+                    <i class="bi bi-bag-plus"></i> Añadir
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Tarjeta de Producto 2 (Fitness Funcional) -->
+          <div class="col">
+            <article class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden tarjeta-producto">
+              <div class="position-relative bg-white text-center p-3">
+                <span class="badge bg-danger position-absolute top-0 start-0 m-3">Stock Bajo</span>
+                <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" class="card-img-top img-fluid rounded" style="height: 200px; object-fit: cover;" alt="Cuerda de Batalla Functional 12m">
+              </div>
+              <div class="card-body d-flex flex-column p-3">
+                <h3 class="card-title h6 fw-bold mb-1">
+                  <a href="producto-detalle.html?id=PROD-002" class="text-decoration-none text-dark stretched-link">
+                    Cuerda de Batalla Functional 12m
+                  </a>
+                </h3>
+                <small class="text-muted mb-2">Polidacrón trenzado de alta densidad</small>
+                <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
+                  <span class="fs-5 fw-bold text-danger">$45.990</span>
+                  <button type="button" class="btn btn-sm btn-outline-dark position-relative z-2" onclick="agregarAlCarrito('PROD-002', 1)" aria-label="Añadir al carrito">
+                    <i class="bi bi-bag-plus"></i> Añadir
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Tarjeta de Producto 3 (Calzado) -->
+          <div class="col">
+            <article class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden tarjeta-producto">
+              <div class="position-relative bg-white text-center p-3">
+                <span class="badge bg-secondary position-absolute top-0 start-0 m-3">Calzado</span>
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80" class="card-img-top img-fluid rounded" style="height: 200px; object-fit: cover;" alt="Zapatillas Cross-Training X-Pro">
+              </div>
+              <div class="card-body d-flex flex-column p-3">
+                <h3 class="card-title h6 fw-bold mb-1">
+                  <a href="producto-detalle.html?id=PROD-003" class="text-decoration-none text-dark stretched-link">
+                    Zapatillas Cross-Training X-Pro
+                  </a>
+                </h3>
+                <small class="text-muted mb-2">Suela plana con soporte lateral de tracción</small>
+                <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
+                  <span class="fs-5 fw-bold text-danger">$59.990</span>
+                  <button type="button" class="btn btn-sm btn-outline-dark position-relative z-2" onclick="agregarAlCarrito('PROD-003', 1)" aria-label="Añadir al carrito">
+                    <i class="bi bi-bag-plus"></i> Añadir
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Tarjeta de Producto 4 (Producto Free / Digital) -->
+          <div class="col">
+            <article class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden tarjeta-producto">
+              <div class="position-relative bg-white text-center p-3">
+                <span class="badge bg-success position-absolute top-0 start-0 m-3">GRATIS</span>
+                <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" class="card-img-top img-fluid rounded" style="height: 200px; object-fit: cover;" alt="Guía Nutricional y Plan de Entrenamiento">
+              </div>
+              <div class="card-body d-flex flex-column p-3">
+                <h3 class="card-title h6 fw-bold mb-1">
+                  <a href="producto-detalle.html?id=PROD-004" class="text-decoration-none text-dark stretched-link">
+                    Guía y Plan de Entrenamiento
+                  </a>
+                </h3>
+                <small class="text-muted mb-2">Manual en formato digital para acondicionamiento</small>
+                <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
+                  <span class="fs-5 fw-bold text-success">FREE</span>
+                  <button type="button" class="btn btn-sm btn-outline-success position-relative z-2" onclick="agregarAlCarrito('PROD-004', 1)" aria-label="Descargar o añadir">
+                    <i class="bi bi-download"></i> Obtener
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="text-center mt-5 d-sm-none">
+          <a href="productos.html" class="btn btn-outline-danger w-100 py-2 fw-semibold">
+            Ver catálogo completo
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 4: ARTÍCULOS DESTACADOS DEL BLOG -->
+    <section class="py-5 bg-white border-top border-bottom">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="h3 fw-bold text-dark mb-2">Casos Curiosos y Bienestar</h2>
+          <p class="text-muted">Artículos técnicos preparados para nuestra comunidad de deportistas</p>
+        </div>
+        <div class="row g-4">
+          <!-- Noticia 1 -->
+          <div class="col-md-6">
+            <article class="card border-0 bg-light rounded-4 p-3 h-100">
+              <div class="row g-3 align-items-center">
+                <div class="col-sm-5">
+                  <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=500&q=80" class="img-fluid rounded-3 w-100" style="height: 160px; object-fit: cover;" alt="Entrenamiento funcional">
+                </div>
+                <div class="col-sm-7">
+                  <span class="text-danger fw-semibold small text-uppercase">Caso Curioso #1</span>
+                  <h3 class="h6 fw-bold mt-1 mb-2">Beneficios del entrenamiento funcional de alta exigencia</h3>
+                  <p class="text-muted small mb-3">Descubre cómo los movimientos multiarticulares mejoran la estabilidad del core y la potencia en deportes de combate.</p>
+                  <a href="blog-detalle-1.html" class="btn btn-sm btn-outline-dark fw-semibold">Ver caso</a>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Noticia 2 -->
+          <div class="col-md-6">
+            <article class="card border-0 bg-light rounded-4 p-3 h-100">
+              <div class="row g-3 align-items-center">
+                <div class="col-sm-5">
+                  <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&w=500&q=80" class="img-fluid rounded-3 w-100" style="height: 160px; object-fit: cover;" alt="Guantes de boxeo">
+                </div>
+                <div class="col-sm-7">
+                  <span class="text-danger fw-semibold small text-uppercase">Caso Curioso #2</span>
+                  <h3 class="h6 fw-bold mt-1 mb-2">Guía técnica: ¿Cómo elegir las onzas exactas en guantes de boxeo?</h3>
+                  <p class="text-muted small mb-3">La diferencia de peso entre 10oz, 12oz, 14oz y 16oz según tu categoría corporal y objetivo de entrenamiento.</p>
+                  <a href="blog-detalle-2.html" class="btn btn-sm btn-outline-dark fw-semibold">Ver caso</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 5: SUSCRIPCIÓN NEWSLETTER -->
+    <section class="py-5 bg-dark text-white text-center">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <h2 class="h4 fw-bold mb-2">Súmate a la Comunidad SportX</h2>
+            <p class="text-white-50 small mb-4">Recibe cupones promocionales mensuales, rutinas funcionales y avisos de preventa exclusiva.</p>
+            <form id="form-newsletter" class="row g-2 justify-content-center" onsubmit="event.preventDefault(); alert('¡Gracias por unirte a SportX!');">
+              <div class="col-8 col-sm-9">
+                <label for="newsletter-email" class="visually-hidden">Correo electrónico</label>
+                <input type="email" id="newsletter-email" class="form-control form-control-lg fs-6" placeholder="Ingresa tu correo (@duoc.cl, @gmail.com)" required>
+              </div>
+              <div class="col-4 col-sm-3">
+                <button type="submit" class="btn btn-danger btn-lg fs-6 w-100 fw-semibold">Unirme</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PIE DE PÁGINA (FOOTER INFORMATIVO) -->
+  <footer class="bg-black text-white-50 pt-5 pb-4 border-top border-dark">
+    <div class="container">
+      <div class="row g-4 mb-4">
+        <!-- Columna 1: Marca y descripción -->
+        <div class="col-lg-4 col-md-6">
+          <h5 class="text-white text-uppercase fw-bold tracking-wider mb-3">
+            Sport<span class="text-danger">X</span> Chile
+          </h5>
+          <p class="small text-white-50">
+            Plataforma integral de indumentaria deportiva y gestión comercial desarrollada para la asignatura DSY1104 de Duoc UC. Estándares IEEE 830 y maquetación responsiva.
+          </p>
+          <div class="d-flex gap-3 fs-5 mt-3">
+            <a href="#" class="text-white-50 text-decoration-none hover-danger" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="text-white-50 text-decoration-none hover-danger" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="text-white-50 text-decoration-none hover-danger" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+            <a href="#" class="text-white-50 text-decoration-none hover-danger" aria-label="GitHub"><i class="bi bi-github"></i></a>
+          </div>
+        </div>
+
+        <!-- Columna 2: Navegación de la tienda -->
+        <div class="col-lg-2 col-md-6">
+          <h6 class="text-white fw-bold text-uppercase small mb-3">Tienda</h6>
+          <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
+            <li><a href="productos.html?cat=boxeo" class="text-white-50 text-decoration-none hover-danger">Boxeo</a></li>
+            <li><a href="productos.html?cat=fitness" class="text-white-50 text-decoration-none hover-danger">Fitness</a></li>
+            <li><a href="productos.html?cat=calzado" class="text-white-50 text-decoration-none hover-danger">Calzado</a></li>
+            <li><a href="productos.html?cat=accesorios" class="text-white-50 text-decoration-none hover-danger">Accesorios</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: Enlaces de soporte y contacto -->
+        <div class="col-lg-3 col-md-6">
+          <h6 class="text-white fw-bold text-uppercase small mb-3">Soporte</h6>
+          <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
+            <li><a href="contacto.html" class="text-white-50 text-decoration-none hover-danger">Formulario de contacto</a></li>
+            <li><a href="nosotros.html" class="text-white-50 text-decoration-none hover-danger">Sobre nosotros y equipo</a></li>
+            <li><a href="login.html" class="text-white-50 text-decoration-none hover-danger">Acceso de operadores</a></li>
+            <li><a href="registro.html" class="text-white-50 text-decoration-none hover-danger">Crear cuenta de cliente</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 4: Información de contacto -->
+        <div class="col-lg-3 col-md-6">
+          <h6 class="text-white fw-bold text-uppercase small mb-3">Contacto Directo</h6>
+          <ul class="list-unstyled small text-white-50 d-flex flex-column gap-2 mb-0">
+            <li><i class="bi bi-geo-alt me-2 text-danger"></i>Santiago de Chile</li>
+            <li><i class="bi bi-envelope me-2 text-danger"></i>contacto@sportx.cl</li>
+            <li><i class="bi bi-telephone me-2 text-danger"></i>+56 9 1234 5678</li>
+            <li><i class="bi bi-clock me-2 text-danger"></i>Lun a Vie: 09:00 - 18:00</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="border-secondary my-4">
+
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center small text-white-50">
+        <p class="mb-2 mb-sm-0">© 2026 SportX Chile. Proyecto académico DSY1104 Duoc UC.</p>
+        <div>
+          <span class="badge bg-secondary-subtle text-secondary me-2">HTML5 Semántico</span>
+          <span class="badge bg-secondary-subtle text-secondary me-2">Bootstrap 5</span>
+          <span class="badge bg-secondary-subtle text-secondary">LocalStorage Persistente</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- DEPENDENCIAS JAVASCRIPT -->
+  <!-- Bootstrap Bundle con Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Lógica de datos y carrito -->
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    // Inicialización del badge del carrito al cargar la página
+    document.addEventListener("DOMContentLoaded", () => {
+      if (typeof actualizarContadorCarrito === "function") {
+        actualizarContadorCarrito();
+      }
+    });
+  </script>
+</body>
+</html>

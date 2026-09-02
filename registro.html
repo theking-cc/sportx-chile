@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Registro de clientes en SportX Chile. Crea tu cuenta para acceder a compras y seguimiento de pedidos.">
+  <title>SportX Chile | Registro de Usuario</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Hoja de estilos externa personalizada -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+  <!-- ENCABEZADO Y BARRA DE NAVEGACIÓN -->
+  <header class="sticky-top bg-white shadow-sm">
+    <div class="border-bottom bg-body-tertiary py-1">
+      <div class="container d-flex justify-content-between align-items-center small">
+        <span class="text-muted d-none d-md-inline">
+          <i class="bi bi-shield-check me-1 text-success"></i>Registro seguro de clientes | Garantía SportX
+        </span>
+        <div class="ms-auto">
+          <a href="login.html" class="text-decoration-none text-dark me-3">
+            <i class="bi bi-box-arrow-in-right me-1"></i>¿Ya tienes cuenta? Iniciar sesión
+          </a>
+          <a href="admin/index.html" class="text-decoration-none text-primary fw-semibold">
+            <i class="bi bi-speedometer2 me-1"></i>Panel Admin
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center fw-bold fs-3 text-dark text-uppercase tracking-wider" href="index.html">
+          <i class="bi bi-lightning-charge-fill text-danger me-2"></i>Sport<span class="text-danger">X</span>
+        </a>
+
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false" aria-label="Alternar navegación">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menuNavegacion">
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold text-uppercase small">
+            <li class="nav-item">
+              <a class="nav-link text-secondary" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-secondary" href="productos.html">Productos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-secondary" href="nosotros.html">Nosotros</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-secondary" href="blogs.html">Blogs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-secondary" href="contacto.html">Contacto</a>
+            </li>
+          </ul>
+
+          <div class="d-flex align-items-center">
+            <a href="carrito.html" class="btn btn-outline-dark position-relative rounded-pill px-3 py-2">
+              <i class="bi bi-cart3 me-1"></i> Cart
+              <span id="cart-badge-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                0
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL: FORMULARIO DE REGISTRO -->
+  <main class="flex-grow-1 py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+
+          <!-- Tarjeta contenedora -->
+          <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+            
+            <div class="text-center mb-4">
+              <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-bold text-uppercase mb-2">
+                Nueva Cuenta
+              </span>
+              <h1 class="h3 fw-bold text-dark mb-1">Registro de Usuario</h1>
+              <p class="text-muted small">
+                Completa todos los campos obligatorios para activar tu perfil de cliente en SportX Chile.
+              </p>
+            </div>
+
+            <!-- Alerta de éxito al guardar -->
+            <div id="alerta-exito" class="alert alert-success d-none align-items-center mb-4" role="alert">
+              <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+              <div>
+                <strong>¡Registro completado con éxito!</strong> Redirigiendo a la pantalla de inicio de sesión...
+              </div>
+            </div>
+
+            <!-- FORMULARIO CON VALIDACIONES JS -->
+            <form id="form-registro" novalidate>
+
+              <!-- RUN Chileno -->
+              <div class="mb-3">
+                <label for="reg-run" class="form-label fw-semibold small text-uppercase">RUN (Sin puntos ni guion) *</label>
+                <input type="text" class="form-control" id="reg-run" placeholder="Ej: 19011022K" maxlength="9" required>
+                <div id="error-run" class="invalid-feedback"></div>
+                <div class="form-text small">Debe contener entre 7 y 9 caracteres alfanuméricos sin puntos ni guion.</div>
+              </div>
+
+              <!-- Nombre y Apellidos en dos columnas -->
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label for="reg-nombre" class="form-label fw-semibold small text-uppercase">Nombre *</label>
+                  <input type="text" class="form-control" id="reg-nombre" placeholder="Tu nombre" maxlength="50" required>
+                  <div id="error-nombre" class="invalid-feedback"></div>
+                </div>
+                <div class="col-md-6">
+                  <label for="reg-apellidos" class="form-label fw-semibold small text-uppercase">Apellidos *</label>
+                  <input type="text" class="form-control" id="reg-apellidos" placeholder="Tus apellidos" maxlength="100" required>
+                  <div id="error-apellidos" class="invalid-feedback"></div>
+                </div>
+              </div>
+
+              <!-- Correo Electrónico -->
+              <div class="mb-3">
+                <label for="reg-email" class="form-label fw-semibold small text-uppercase">Correo Electrónico *</label>
+                <input type="email" class="form-control" id="reg-email" placeholder="usuario@duoc.cl o usuario@gmail.com" maxlength="100" required>
+                <div id="error-email" class="invalid-feedback"></div>
+                <div class="form-text small">Solo dominios permitidos: @duoc.cl, @profesor.duoc.cl y @gmail.com</div>
+              </div>
+
+              <!-- Contraseña y Confirmación -->
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label for="reg-password" class="form-label fw-semibold small text-uppercase">Contraseña *</label>
+                  <input type="password" class="form-control" id="reg-password" placeholder="Entre 4 y 10 caracteres" maxlength="10" required>
+                  <div id="error-password" class="invalid-feedback"></div>
+                </div>
+                <div class="col-md-6">
+                  <label for="reg-password-confirm" class="form-label fw-semibold small text-uppercase">Confirmar Contraseña *</label>
+                  <input type="password" class="form-control" id="reg-password-confirm" placeholder="Repite tu contraseña" maxlength="10" required>
+                  <div id="error-password-confirm" class="invalid-feedback"></div>
+                </div>
+              </div>
+
+              <!-- Teléfono y Fecha de Nacimiento -->
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label for="reg-telefono" class="form-label fw-semibold small text-uppercase">Teléfono <span class="text-muted fw-normal">(Opcional)</span></label>
+                  <input type="tel" class="form-control" id="reg-telefono" placeholder="+56 9 1234 5678" maxlength="15">
+                  <div id="error-telefono" class="invalid-feedback"></div>
+                </div>
+                <div class="col-md-6">
+                  <label for="reg-fecha-nac" class="form-label fw-semibold small text-uppercase">Fecha de Nacimiento <span class="text-muted fw-normal">(Opcional)</span></label>
+                  <input type="date" class="form-control" id="reg-fecha-nac">
+                  <div id="error-fecha-nac" class="invalid-feedback"></div>
+                </div>
+              </div>
+
+              <!-- Selects Dinámicos Región y Comuna -->
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label for="reg-region" class="form-label fw-semibold small text-uppercase">Región *</label>
+                  <select class="form-select" id="reg-region" required>
+                    <option value="">-- Selecciona una región --</option>
+                  </select>
+                  <div id="error-region" class="invalid-feedback"></div>
+                </div>
+                <div class="col-md-6">
+                  <label for="reg-comuna" class="form-label fw-semibold small text-uppercase">Comuna *</label>
+                  <select class="form-select" id="reg-comuna" required disabled>
+                    <option value="">-- Primero elige una región --</option>
+                  </select>
+                  <div id="error-comuna" class="invalid-feedback"></div>
+                </div>
+              </div>
+
+              <!-- Dirección de Envío -->
+              <div class="mb-4">
+                <label for="reg-direccion" class="form-label fw-semibold small text-uppercase">Dirección Completa *</label>
+                <textarea class="form-control" id="reg-direccion" rows="2" placeholder="Calle, número, depto o villa (máximo 300 caracteres)" maxlength="300" required></textarea>
+                <div id="error-direccion" class="invalid-feedback"></div>
+                <div class="d-flex justify-content-between form-text small">
+                  <span>Requerido para cálculo de despachos.</span>
+                  <span id="contador-direccion" class="text-muted">0 / 300</span>
+                </div>
+              </div>
+
+              <!-- Botón de Envío -->
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-danger btn-lg py-3 fw-bold text-uppercase shadow-sm">
+                  <i class="bi bi-person-check me-2"></i>Registrar Cuenta
+                </button>
+              </div>
+
+              <div class="text-center mt-4 pt-2 border-top">
+                <span class="text-muted small">¿Ya posees una cuenta registrada?</span>
+                <a href="login.html" class="text-danger fw-semibold small ms-1 text-decoration-none">Inicia sesión aquí</a>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- PIE DE PÁGINA INFORMATIVO -->
+  <footer class="bg-black text-white-50 pt-4 pb-3 border-top border-dark mt-auto">
+    <div class="container text-center small">
+      <p class="mb-1 text-white">Sport<span class="text-danger">X</span> Chile | Evaluación Parcial N° 1 - DSY1104 Duoc UC</p>
+      <p class="mb-0 text-white-50">Validaciones en JavaScript, DOM Manipulation y LocalStorage.</p>
+    </div>
+  </footer>
+
+  <!-- DEPENDENCIAS Y SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/validations.js"></script>
+  <script src="js/cart.js"></script>
+
+  <!-- LÓGICA ESPECÍFICA DEL FORMULARIO DE REGISTRO -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Actualizar badge del carrito
+      if (typeof actualizarContadorCarrito === "function") {
+        actualizarContadorCarrito();
+      }
+
+      // 2. Inicializar selects anidados de Región y Comuna desde data.js
+      if (typeof inicializarSelectsUbicacion === "function") {
+        inicializarSelectsUbicacion("reg-region", "reg-comuna");
+      }
+
+      // 3. Contador de caracteres en tiempo real para dirección
+      const txtDireccion = document.getElementById("reg-direccion");
+      const contadorTxt = document.getElementById("contador-direccion");
+      txtDireccion.addEventListener("input", () => {
+        contadorTxt.textContent = `${txtDireccion.value.length} / 300`;
+      });
+
+      // 4. Captura y validación del formulario
+      const form = document.getElementById("form-registro");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let esValido = true;
+
+        // Elementos
+        const run = document.getElementById("reg-run");
+        const errRun = document.getElementById("error-run");
+        const nombre = document.getElementById("reg-nombre");
+        const errNombre = document.getElementById("error-nombre");
+        const apellidos = document.getElementById("reg-apellidos");
+        const errApellidos = document.getElementById("error-apellidos");
+        const email = document.getElementById("reg-email");
+        const errEmail = document.getElementById("error-email");
+        const pass = document.getElementById("reg-password");
+        const errPass = document.getElementById("error-password");
+        const passConf = document.getElementById("reg-password-confirm");
+        const errPassConf = document.getElementById("error-password-confirm");
+        const region = document.getElementById("reg-region");
+        const errRegion = document.getElementById("error-region");
+        const comuna = document.getElementById("reg-comuna");
+        const errComuna = document.getElementById("error-comuna");
+        const direccion = document.getElementById("reg-direccion");
+        const errDireccion = document.getElementById("error-direccion");
+
+        // Validación RUN
+        const runVal = run.value.trim().replace(/\./g, "").replace(/-/g, "");
+        if (!runVal) {
+          setCampoInvalido(run, errRun, "El RUN es obligatorio.");
+          esValido = false;
+        } else if (!validarRunChileno(runVal)) {
+          setCampoInvalido(run, errRun, "RUN inválido. Debe tener entre 7 y 9 dígitos, sin puntos ni guion (Ej: 19011022K).");
+          esValido = false;
+        } else {
+          setCampoValido(run, errRun);
+        }
+
+        // Validación Nombre
+        if (!nombre.value.trim()) {
+          setCampoInvalido(nombre, errNombre, "El nombre es obligatorio.");
+          esValido = false;
+        } else if (nombre.value.trim().length > 50) {
+          setCampoInvalido(nombre, errNombre, "Máximo 50 caracteres.");
+          esValido = false;
+        } else {
+          setCampoValido(nombre, errNombre);
+        }
+
+        // Validación Apellidos
+        if (!apellidos.value.trim()) {
+          setCampoInvalido(apellidos, errApellidos, "Los apellidos son obligatorios.");
+          esValido = false;
+        } else if (apellidos.value.trim().length > 100) {
+          setCampoInvalido(apellidos, errApellidos, "Máximo 100 caracteres.");
+          esValido = false;
+        } else {
+          setCampoValido(apellidos, errApellidos);
+        }
+
+        // Validación Email institucional / comercial
+        const emailVal = email.value.trim();
+        if (!emailVal) {
+          setCampoInvalido(email, errEmail, "El correo electrónico es obligatorio.");
+          esValido = false;
+        } else if (emailVal.length > 100) {
+          setCampoInvalido(email, errEmail, "El correo no puede exceder los 100 caracteres.");
+          esValido = false;
+        } else if (!validarEmailDominio(emailVal)) {
+          setCampoInvalido(email, errEmail, "Dominio no autorizado. Solo @duoc.cl, @profesor.duoc.cl o @gmail.com.");
+          esValido = false;
+        } else {
+          setCampoValido(email, errEmail);
+        }
+
+        // Validación Password (4 a 10 caracteres)
+        const passVal = pass.value;
+        if (!passVal) {
+          setCampoInvalido(pass, errPass, "La contraseña es obligatoria.");
+          esValido = false;
+        } else if (passVal.length < 4 || passVal.length > 10) {
+          setCampoInvalido(pass, errPass, "Debe contener entre 4 y 10 caracteres.");
+          esValido = false;
+        } else {
+          setCampoValido(pass, errPass);
+        }
+
+        // Confirmar Password
+        if (!passConf.value) {
+          setCampoInvalido(passConf, errPassConf, "Confirma tu contraseña.");
+          esValido = false;
+        } else if (passConf.value !== passVal) {
+          setCampoInvalido(passConf, errPassConf, "Las contraseñas no coinciden.");
+          esValido = false;
+        } else {
+          setCampoValido(passConf, errPassConf);
+        }
+
+        // Validación Región y Comuna
+        if (!region.value) {
+          setCampoInvalido(region, errRegion, "Selecciona una región.");
+          esValido = false;
+        } else {
+          setCampoValido(region, errRegion);
+        }
+
+        if (!comuna.value) {
+          setCampoInvalido(comuna, errComuna, "Selecciona una comuna.");
+          esValido = false;
+        } else {
+          setCampoValido(comuna, errComuna);
+        }
+
+        // Validación Dirección
+        if (!direccion.value.trim()) {
+          setCampoInvalido(direccion, errDireccion, "La dirección es obligatoria.");
+          esValido = false;
+        } else if (direccion.value.trim().length > 300) {
+          setCampoInvalido(direccion, errDireccion, "La dirección no puede exceder los 300 caracteres.");
+          esValido = false;
+        } else {
+          setCampoValido(direccion, errDireccion);
+        }
+
+        // Si todo está correcto, persistir usuario y redirigir
+        if (esValido) {
+          const nuevoUsuario = {
+            run: runVal.toUpperCase(),
+            nombre: nombre.value.trim(),
+            apellidos: apellidos.value.trim(),
+            correo: emailVal.toLowerCase(),
+            password: passVal,
+            telefono: document.getElementById("reg-telefono").value.trim(),
+            fechaNacimiento: document.getElementById("reg-fecha-nac").value,
+            region: region.value,
+            comuna: comuna.value,
+            direccion: direccion.value.trim(),
+            rol: "Cliente"
+          };
+
+          // Guardar en arreglo local de usuarios
+          const usuariosGuardados = JSON.parse(localStorage.getItem("sportx_users")) || [];
+          usuariosGuardados.push(nuevoUsuario);
+          localStorage.setItem("sportx_users", JSON.stringify(usuariosGuardados));
+
+          // Notificación visual de éxito
+          const alerta = document.getElementById("alerta-exito");
+          alerta.classList.remove("d-none");
+          alerta.classList.add("d-flex");
+
+          // Deshabilitar botón para evitar doble envío
+          form.querySelector("button[type='submit']").disabled = true;
+
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1800);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

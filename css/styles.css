@@ -1,0 +1,34 @@
+/* Paleta y detalles personalizados SportX */
+:root {
+  --sportx-red: #dc3545;
+  --sportx-dark: #121212;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+}
+
+/* Transición suave para las tarjetas del catálogo */
+.tarjeta-producto {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta-producto:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Efecto hover en los enlaces del pie de página */
+.hover-danger {
+  transition: color 0.15s ease-in-out;
+}
+
+.hover-danger:hover {
+  color: var(--sportx-red) !important;
+}
+
+/* Espaciado del tracking del logo */
+.tracking-wider {
+  letter-spacing: 1px;
+}
