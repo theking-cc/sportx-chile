@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Carrito de compras de SportX Chile. Revisa tus productos y aplica cupones de descuento.">
+  <title>SportX Chile | Carrito de Compras</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- CSS Externo -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+  <!-- ENCABEZADO Y NAVEGACIÓN -->
+  <header class="sticky-top bg-white shadow-sm">
+    <div class="border-bottom bg-body-tertiary py-1">
+      <div class="container d-flex justify-content-between align-items-center small">
+        <span class="text-muted d-none d-md-inline">
+          <i class="bi bi-shield-check me-1 text-success"></i>Compra segura protegida | SportX Chile
+        </span>
+        <div class="ms-auto">
+          <a href="login.html" class="text-decoration-none text-dark me-3">
+            <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar sesión
+          </a>
+          <a href="registro.html" class="text-decoration-none text-dark me-3">
+            <i class="bi bi-person-plus me-1"></i>Registrar usuario
+          </a>
+          <a href="admin/index.html" class="text-decoration-none text-primary fw-semibold">
+            <i class="bi bi-speedometer2 me-1"></i>Panel Admin
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center fw-bold fs-3 text-dark text-uppercase tracking-wider" href="index.html">
+          <i class="bi bi-lightning-charge-fill text-danger me-2"></i>Sport<span class="text-danger">X</span>
+        </a>
+
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false" aria-label="Alternar navegación">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menuNavegacion">
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold text-uppercase small">
+            <li class="nav-item"><a class="nav-link text-secondary" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link text-secondary" href="productos.html">Productos</a></li>
+            <li class="nav-item"><a class="nav-link text-secondary" href="nosotros.html">Nosotros</a></li>
+            <li class="nav-item"><a class="nav-link text-secondary" href="blogs.html">Blogs</a></li>
+            <li class="nav-item"><a class="nav-link text-secondary" href="contacto.html">Contacto</a></li>
+          </ul>
+
+          <div class="d-flex align-items-center">
+            <a href="carrito.html" class="btn btn-danger position-relative rounded-pill px-3 py-2">
+              <i class="bi bi-cart3 me-1"></i> Cart
+              <span id="cart-badge-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+                0
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL: CARRITO DE COMPRAS -->
+  <main class="flex-grow-1 py-5">
+    <div class="container">
+
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+          <h1 class="h3 fw-bold text-dark mb-1">Mi Carrito de Compras</h1>
+          <p class="text-muted small mb-0">Revisa tus artículos seleccionados antes de confirmar la orden</p>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-danger" id="btn-vaciar-todo" onclick="vaciarCarritoCompleto()">
+          <i class="bi bi-trash3 me-1"></i>Vaciar Carrito
+        </button>
+      </div>
+
+      <!-- Alerta de compra procesada con éxito -->
+      <div id="alerta-checkout-exito" class="alert alert-success d-none align-items-center mb-4" role="alert">
+        <i class="bi bi-check-circle-fill me-2 fs-4"></i>
+        <div>
+          <h5 class="alert-heading mb-1 fw-bold">¡Orden generada con éxito!</h5>
+          <p class="mb-0 small">Tu pedido de demostración ha sido registrado. Gracias por comprar en SportX Chile.</p>
+        </div>
+      </div>
+
+      <div class="row g-4" id="contenedor-principal-carrito">
+
+        <!-- COLUMNA IZQUIERDA: LISTA DE ARTÍCULOS EN EL CARRITO -->
+        <div class="col-lg-8">
+          <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 bg-white">
+            
+            <!-- Listado inyectado por JavaScript -->
+            <div id="lista-items-carrito" class="d-flex flex-column gap-3">
+              <!-- Renderizado automático -->
+            </div>
+
+            <!-- Vista vacía cuando no hay ítems -->
+            <div id="carrito-vacio" class="text-center py-5 d-none">
+              <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style="width: 80px; height: 80px;">
+                <i class="bi bi-cart-x fs-1 text-muted"></i>
+              </div>
+              <h4 class="h5 fw-bold text-dark">Tu carrito está vacío</h4>
+              <p class="text-muted small mb-4">Aún no has agregado ningún producto a tu lista de compra.</p>
+              <a href="productos.html" class="btn btn-danger px-4 py-2 rounded-pill fw-semibold">
+                <i class="bi bi-grid-fill me-2"></i>Explorar Catálogo
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: RESUMEN DE ORDEN Y CUPONES -->
+        <div class="col-lg-4" id="seccion-resumen">
+          <div class="card border-0 shadow-sm rounded-4 p-4 bg-white sticky-top" style="top: 100px;">
+            <h2 class="h5 fw-bold text-dark mb-3">Resumen del Pedido</h2>
+
+            <!-- Desglose de importes -->
+            <div class="d-flex justify-content-between text-muted mb-2">
+              <span>Subtotal productos:</span>
+              <span id="resumen-subtotal" class="fw-semibold text-dark">$0</span>
+            </div>
+
+            <div class="d-flex justify-content-between text-muted mb-2" id="fila-descuento" style="display: none !important;">
+              <span class="text-success"><i class="bi bi-tag-fill me-1"></i>Descuento cupón:</span>
+              <span id="resumen-descuento" class="fw-semibold text-success">-$0</span>
+            </div>
+
+            <div class="d-flex justify-content-between text-muted mb-3">
+              <span>Despacho estimado:</span>
+              <span class="text-success fw-semibold">Gratis</span>
+            </div>
+
+            <hr class="my-3">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <span class="fs-5 fw-bold text-dark">TOTAL:</span>
+              <span id="resumen-total" class="fs-4 fw-black text-danger">$0</span>
+            </div>
+
+            <!-- Formulario de Cupones -->
+            <form id="form-cupon" class="mb-4" onsubmit="event.preventDefault(); procesarCupon();">
+              <label for="input-cupon" class="form-label small fw-bold text-uppercase text-muted">Cupón Promocional</label>
+              <div class="input-group">
+                <input type="text" id="input-cupon" class="form-control text-uppercase" placeholder="Ej: DUOC10" maxlength="20">
+                <button type="submit" class="btn btn-outline-dark fw-semibold" id="btn-aplicar-cupon">Aplicar</button>
+              </div>
+              <div id="error-cupon" class="invalid-feedback small"></div>
+              <div id="exito-cupon" class="text-success small fw-semibold mt-1 d-none"></div>
+              <div class="form-text small mt-1">Prueba con los códigos: <strong>DUOC10</strong> (-10%) o <strong>SPORTX2026</strong> (-$5.000).</div>
+            </form>
+
+            <!-- Botón de Pago / Checkout -->
+            <button type="button" class="btn btn-success btn-lg w-100 py-3 fw-bold text-uppercase shadow-sm" id="btn-pagar" onclick="finalizarCompra()">
+              <i class="bi bi-credit-card me-2"></i>PAGAR AHORA
+            </button>
+
+            <div class="mt-3 text-center">
+              <small class="text-muted"><i class="bi bi-lock-fill me-1"></i>Transacción segura protegida por SSL</small>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="bg-black text-white-50 pt-4 pb-3 border-top border-dark mt-auto">
+    <div class="container text-center small">
+      <p class="mb-1 text-white">Sport<span class="text-danger">X</span> Chile | Evaluación Parcial N° 1 - DSY1104 Duoc UC</p>
+      <p class="mb-0 text-white-50">Carrito de compras dinámico y gestión de cupones mediante LocalStorage.</p>
+    </div>
+  </footer>
+
+  <!-- DEPENDENCIAS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+
+  <!-- LÓGICA ESPECÍFICA DEL CARRITO -->
+  <script>
+    let descuentoAplicado = 0;
+    let cuponActivo = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderizarVistaCarrito();
+    });
+
+    function renderizarVistaCarrito() {
+      actualizarContadorCarrito();
+      const carrito = obtenerCarrito();
+      const contenedorLista = document.getElementById("lista-items-carrito");
+      const vistaVacio = document.getElementById("carrito-vacio");
+      const seccionResumen = document.getElementById("seccion-resumen");
+      const btnVaciar = document.getElementById("btn-vaciar-todo");
+
+      if (carrito.length === 0) {
+        contenedorLista.innerHTML = "";
+        vistaVacio.classList.remove("d-none");
+        seccionResumen.classList.add("d-none");
+        btnVaciar.classList.add("d-none");
+        return;
+      }
+
+      vistaVacio.classList.add("d-none");
+      seccionResumen.classList.remove("d-none");
+      btnVaciar.classList.remove("d-none");
+      contenedorLista.innerHTML = "";
+
+      let subtotalGeneral = 0;
+
+      carrito.forEach((item, index) => {
+        const itemSubtotal = item.precio * item.cantidad;
+        subtotalGeneral += itemSubtotal;
+
+        const precioTxt = item.precio === 0 ? "FREE" : `$${item.precio.toLocaleString("es-CL")}`;
+        const subtotalTxt = item.precio === 0 ? "FREE" : `$${itemSubtotal.toLocaleString("es-CL")}`;
+
+        const itemHTML = `
+          <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between p-3 border rounded-3 gap-3">
+            <div class="d-flex align-items-center gap-3 w-100 w-sm-auto">
+              <img src="${item.imagen}" class="rounded border" style="width: 75px; height: 75px; object-fit: cover;" alt="${item.nombre}" onerror="this.src='https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=200&q=80'">
+              <div>
+                <h3 class="h6 fw-bold mb-1 text-dark">${item.nombre}</h3>
+                <span class="text-muted small">Precio: <strong class="text-danger">${precioTxt}</strong></span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between justify-content-sm-end gap-3 w-100 w-sm-auto">
+              <!-- Controles de cantidad -->
+              <div class="input-group input-group-sm" style="width: 110px;">
+                <button type="button" class="btn btn-outline-secondary" onclick="modificarCantidadItem(${index}, -1)">-</button>
+                <input type="text" class="form-control text-center bg-white" value="${item.cantidad}" readonly>
+                <button type="button" class="btn btn-outline-secondary" onclick="modificarCantidadItem(${index}, 1)">+</button>
+              </div>
+
+              <!-- Subtotal del producto -->
+              <div class="text-end" style="min-width: 90px;">
+                <span class="fw-bold text-dark fs-6">${subtotalTxt}</span>
+              </div>
+
+              <!-- Botón Eliminar -->
+              <button type="button" class="btn btn-sm btn-outline-danger border-0" onclick="eliminarItemDelCarrito(${index})" aria-label="Eliminar ${item.nombre}">
+                <i class="bi bi-trash3-fill"></i>
+              </button>
+            </div>
+          </div>
+        `;
+        contenedorLista.innerHTML += itemHTML;
+      });
+
+      // Calcular descuentos y totales
+      calcularYMostrarTotales(subtotalGeneral);
+    }
+
+    function modificarCantidadItem(index, cambio) {
+      const carrito = obtenerCarrito();
+      if (!carrito[index]) return;
+
+      carrito[index].cantidad += cambio;
+
+      if (carrito[index].cantidad <= 0) {
+        carrito.splice(index, 1);
+      }
+
+      guardarCarrito(carrito);
+      renderizarVistaCarrito();
+    }
+
+    function eliminarItemDelCarrito(index) {
+      const carrito = obtenerCarrito();
+      carrito.splice(index, 1);
+      guardarCarrito(carrito);
+      renderizarVistaCarrito();
+    }
+
+    function vaciarCarritoCompleto() {
+      if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
+        guardarCarrito([]);
+        descuentoAplicado = 0;
+        cuponActivo = null;
+        renderizarVistaCarrito();
+      }
+    }
+
+    function procesarCupon() {
+      const input = document.getElementById("input-cupon");
+      const errEl = document.getElementById("error-cupon");
+      const exitoEl = document.getElementById("exito-cupon");
+      const codigo = input.value.trim().toUpperCase();
+
+      input.classList.remove("is-invalid");
+      errEl.textContent = "";
+      exitoEl.classList.add("d-none");
+
+      if (!codigo) {
+        input.classList.add("is-invalid");
+        errEl.textContent = "Ingresa un código de cupón.";
+        return;
+      }
+
+      const cup = CUPONES_DISPONIBLES.find(c => c.codigo === codigo);
+
+      if (!cup) {
+        input.classList.add("is-invalid");
+        errEl.textContent = "El código ingresado no existe o ha caducado.";
+        descuentoAplicado = 0;
+        cuponActivo = null;
+        renderizarVistaCarrito();
+        return;
+      }
+
+      cuponActivo = cup;
+      exitoEl.textContent = `¡Cupón ${cup.codigo} aplicado con éxito!`;
+      exitoEl.classList.remove("d-none");
+
+      const carrito = obtenerCarrito();
+      const subtotal = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+      calcularYMostrarTotales(subtotal);
+    }
+
+    function calcularYMostrarTotales(subtotal) {
+      document.getElementById("resumen-subtotal").textContent = `$${subtotal.toLocaleString("es-CL")}`;
+
+      if (cuponActivo) {
+        if (cuponActivo.tipo === "porcentaje") {
+          descuentoAplicado = Math.round(subtotal * cuponActivo.descuento);
+        } else if (cuponActivo.tipo === "fijo") {
+          descuentoAplicado = Math.min(subtotal, cuponActivo.descuento);
+        }
+      } else {
+        descuentoAplicado = 0;
+      }
+
+      const filaDesc = document.getElementById("fila-descuento");
+      const resumenDesc = document.getElementById("resumen-descuento");
+
+      if (descuentoAplicado > 0) {
+        filaDesc.style.removeProperty("display");
+        filaDesc.classList.add("d-flex");
+        resumenDesc.textContent = `-$${descuentoAplicado.toLocaleString("es-CL")}`;
+      } else {
+        filaDesc.style.setProperty("display", "none", "important");
+        filaDesc.classList.remove("d-flex");
+      }
+
+      const totalFinal = Math.max(0, subtotal - descuentoAplicado);
+      document.getElementById("resumen-total").textContent = `$${totalFinal.toLocaleString("es-CL")}`;
+    }
+
+    function finalizarCompra() {
+      const carrito = obtenerCarrito();
+      if (carrito.length === 0) return;
+
+      // Limpiar carrito en LocalStorage simulando checkout exitoso
+      guardarCarrito([]);
+      descuentoAplicado = 0;
+      cuponActivo = null;
+
+      const alerta = document.getElementById("alerta-checkout-exito");
+      alerta.classList.remove("d-none");
+      alerta.classList.add("d-flex");
+
+      renderizarVistaCarrito();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+</body>
+</html>

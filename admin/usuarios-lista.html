@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SportX Admin | Mantenedor de Usuarios</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- CSS Externo -->
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="bg-light">
+
+  <div class="d-flex min-vh-100">
+
+    <!-- SIDEBAR -->
+    <aside class="bg-white border-end d-flex flex-column p-3" style="width: 260px; min-width: 260px;">
+      <a href="index.html" class="d-flex align-items-center text-dark text-decoration-none fw-bold fs-4 text-uppercase mb-4 px-2 tracking-wider">
+        <i class="bi bi-lightning-charge-fill text-danger me-2"></i>Sport<span class="text-danger">X</span>
+      </a>
+
+      <ul class="nav nav-pills flex-column mb-auto gap-1">
+        <li class="nav-item">
+          <a href="index.html" class="nav-link text-secondary">
+            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="productos-lista.html" class="nav-link text-secondary">
+            <i class="bi bi-box-seam me-2"></i>Productos
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="usuarios-lista.html" class="nav-link active bg-danger text-white">
+            <i class="bi bi-people me-2"></i>Usuarios
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../index.html" class="nav-link text-secondary" target="_blank">
+            <i class="bi bi-shop me-2"></i>Ir a la Tienda
+          </a>
+        </li>
+      </ul>
+
+      <hr>
+      <div class="small text-muted px-2">
+        SportX Chile Backoffice
+      </div>
+    </aside>
+
+    <!-- CONTENIDO CENTRAL -->
+    <main class="flex-grow-1 p-4 overflow-auto">
+      
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 pb-3 mb-4 border-bottom">
+        <div>
+          <h1 class="h3 fw-bold text-dark mb-1">Gestión de Usuarios</h1>
+          <p class="text-muted small mb-0">Control de operadores y roles del sistema (RBAC)</p>
+        </div>
+        <div>
+          <a href="usuario-form.html" class="btn btn-danger shadow-sm fw-semibold">
+            <i class="bi bi-person-plus me-2"></i>Nuevo Usuario
+          </a>
+        </div>
+      </div>
+
+      <!-- TABLA DE USUARIOS (Mockup Figura 12) -->
+      <section class="card border-0 shadow-sm rounded-4 bg-white p-4">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 small" id="tabla-usuarios">
+            <thead class="table-light">
+              <tr>
+                <th>RUN</th>
+                <th>Nombre Completo</th>
+                <th>Correo Electrónico</th>
+                <th>Rol</th>
+                <th>Región / Comuna</th>
+                <th>Teléfono</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-usuarios">
+              <!-- Inyectado por JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- DEPENDENCIAS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/data.js"></script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Verificación estricta de Rol: Solo Administrador
+      const sesionRaw = localStorage.getItem("sportx_session");
+      if (!sesionRaw) {
+        window.location.href = "../login.html";
+        return;
+      }
+      const sesion = JSON.parse(sesionRaw);
+      if (sesion.rol !== "Administrador") {
+        alert("Acceso denegado: Solo administradores pueden gestionar usuarios.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      renderizarTablaUsuarios();
+    });
+
+    function obtenerBaseUsuarios() {
+      // Cuentas demo predeterminadas si no existen
+      const usuariosIniciales = [
+        {
+          run: "11111111K",
+          nombre: "Administrador",
+          apellidos: "General SportX",
+          correo: "admin@duoc.cl",
+          password: "admin123",
+          rol: "Administrador",
+          region: "Región Metropolitana de Santiago",
+          comuna: "Santiago",
+          telefono: "+56 9 1111 2222",
+          direccion: "Av. Libertador Bernardo O'Higgins 123"
+        },
+        {
+          run: "22222222J", // Formato simulado
+          nombre: "Vendedor",
+          apellidos: "Tienda Santiago",
+          correo: "vendedor@duoc.cl",
+          password: "vend123",
+          rol: "Vendedor",
+          region: "Región Metropolitana de Santiago",
+          comuna: "Providencia",
+          telefono: "+56 9 3333 4444",
+          direccion: "Av. Providencia 456"
+        },
+        {
+          run: "19011022K",
+          nombre: "Cliente",
+          apellidos: "Prueba Sistema",
+          correo: "cliente@gmail.com",
+          password: "clie123",
+          rol: "Cliente",
+          region: "Región de Valparaíso",
+          comuna: "Viña del Mar",
+          telefono: "+56 9 5555 6666",
+          direccion: "Calle Prat 789"
+        }
+      ];
+
+      const guardados = localStorage.getItem("sportx_users");
+      if (!guardados) {
+        localStorage.setItem("sportx_users", JSON.stringify(usuariosIniciales));
+        return usuariosIniciales;
+      }
+      return JSON.parse(guardados);
+    }
+
+    function renderizarTablaUsuarios() {
+      const lista = obtenerBaseUsuarios();
+      const tbody = document.getElementById("tbody-usuarios");
+      tbody.innerHTML = "";
+
+      lista.forEach((u, index) => {
+        let badgeColor = "bg-secondary";
+        if (u.rol === "Administrador") badgeColor = "bg-danger";
+        if (u.rol === "Vendedor") badgeColor = "bg-warning text-dark";
+
+        const fila = `
+          <tr>
+            <td class="fw-bold">${u.run}</td>
+            <td class="text-dark fw-semibold">${u.nombre} ${u.apellidos}</td>
+            <td>${u.correo}</td>
+            <td><span class="badge ${badgeColor}">${u.rol}</span></td>
+            <td><small class="text-muted">${u.comuna || "-"}, ${u.region ? u.region.replace("Región ", "") : "-"}</small></td>
+            <td>${u.telefono || '<span class="text-muted">N/A</span>'}</td>
+            <td class="text-end">
+              <a href="usuario-form.html?run=${u.run}" class="btn btn-sm btn-outline-secondary me-1" title="Editar"><i class="bi bi-pencil"></i></a>
+              <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarUsuario(${index})" title="Eliminar"><i class="bi bi-trash"></i></button>
+            </td>
+          </tr>
+        `;
+        tbody.innerHTML += fila;
+      });
+    }
+
+    function eliminarUsuario(index) {
+      const lista = obtenerBaseUsuarios();
+      const usuario = lista[index];
+
+      // Evitar eliminar al administrador actual
+      const sesion = JSON.parse(localStorage.getItem("sportx_session"));
+      if (usuario.correo.toLowerCase() === sesion.correo.toLowerCase()) {
+        alert("No puedes eliminar la cuenta con la que has iniciado sesión.");
+        return;
+      }
+
+      if (confirm(`¿Estás seguro de que deseas eliminar al usuario ${usuario.nombre} ${usuario.apellidos}?`)) {
+        lista.splice(index, 1);
+        localStorage.setItem("sportx_users", JSON.stringify(lista));
+        renderizarTablaUsuarios();
+      }
+    }
+  </script>
+</body>
+</html>

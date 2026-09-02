@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SportX Admin | Formulario de Producto</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- CSS Externo -->
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="bg-light">
+
+  <div class="d-flex min-vh-100">
+
+    <!-- SIDEBAR -->
+    <aside class="bg-white border-end d-flex flex-column p-3" style="width: 260px; min-width: 260px;">
+      <a href="index.html" class="d-flex align-items-center text-dark text-decoration-none fw-bold fs-4 text-uppercase mb-4 px-2 tracking-wider">
+        <i class="bi bi-lightning-charge-fill text-danger me-2"></i>Sport<span class="text-danger">X</span>
+      </a>
+
+      <ul class="nav nav-pills flex-column mb-auto gap-1">
+        <li class="nav-item"><a href="index.html" class="nav-link text-secondary"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+        <li class="nav-item"><a href="productos-lista.html" class="nav-link active bg-danger text-white"><i class="bi bi-box-seam me-2"></i>Productos</a></li>
+        <li class="nav-item" id="menu-usuarios-item"><a href="usuarios-lista.html" class="nav-link text-secondary"><i class="bi bi-people me-2"></i>Usuarios</a></li>
+        <li class="nav-item"><a href="../index.html" class="nav-link text-secondary" target="_blank"><i class="bi bi-shop me-2"></i>Ir a la Tienda</a></li>
+      </ul>
+      <hr>
+      <div class="small text-muted px-2">SportX Chile</div>
+    </aside>
+
+    <!-- ÁREA DE TRABAJO -->
+    <main class="flex-grow-1 p-4 overflow-auto">
+      
+      <div class="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom">
+        <div>
+          <h1 class="h3 fw-bold text-dark mb-0" id="form-titulo">Nuevo Producto</h1>
+          <small class="text-muted">Ingresa los datos requeridos por la especificación de negocio</small>
+        </div>
+        <a href="productos-lista.html" class="btn btn-outline-secondary small">
+          <i class="bi bi-arrow-left me-1"></i>Volver al listado
+        </a>
+      </div>
+
+      <div class="card border-0 shadow-sm rounded-4 bg-white p-4 col-lg-9 mx-auto">
+        <form id="form-producto" novalidate>
+          
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="prod-cod" class="form-label fw-semibold small text-uppercase">Código del Producto *</label>
+              <input type="text" class="form-control" id="prod-cod" placeholder="Ej: BOX-002" minlength="3" required>
+              <div id="error-prod-cod" class="invalid-feedback"></div>
+              <div class="form-text small">Requerido. Mínimo 3 caracteres.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="prod-nom" class="form-label fw-semibold small text-uppercase">Nombre del Producto *</label>
+              <input type="text" class="form-control" id="prod-nom" placeholder="Ej: Saco de Boxeo 30kg" maxlength="100" required>
+              <div id="error-prod-nom" class="invalid-feedback"></div>
+              <div class="form-text small">Requerido. Máximo 100 caracteres.</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="prod-desc" class="form-label fw-semibold small text-uppercase">Descripción <span class="text-muted fw-normal">(Opcional)</span></label>
+            <textarea class="form-control" id="prod-desc" rows="3" maxlength="500" placeholder="Detalles técnicos, materiales y uso recomendado"></textarea>
+            <div id="error-prod-desc" class="invalid-feedback"></div>
+            <div class="form-text small">Máximo 500 caracteres.</div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label for="prod-precio-input" class="form-label fw-semibold small text-uppercase">Precio (CLP) *</label>
+              <input type="number" class="form-control" id="prod-precio-input" min="0" step="1" placeholder="Ej: 29990" required>
+              <div id="error-prod-precio" class="invalid-feedback"></div>
+              <div class="form-text small">Mínimo 0 (0 se considera FREE).</div>
+            </div>
+            <div class="col-md-4">
+              <label for="prod-stock-input" class="form-label fw-semibold small text-uppercase">Stock Disponible *</label>
+              <input type="number" class="form-control" id="prod-stock-input" min="0" step="1" placeholder="Ej: 15" required>
+              <div id="error-prod-stock" class="invalid-feedback"></div>
+              <div class="form-text small">Solo números enteros >= 0.</div>
+            </div>
+            <div class="col-md-4">
+              <label for="prod-critico-input" class="form-label fw-semibold small text-uppercase">Stock Crítico <span class="text-muted fw-normal">(Opcional)</span></label>
+              <input type="number" class="form-control" id="prod-critico-input" min="0" step="1" placeholder="Ej: 3">
+              <div id="error-prod-critico" class="invalid-feedback"></div>
+              <div class="form-text small">Dispara alerta visual.</div>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label for="prod-cat" class="form-label fw-semibold small text-uppercase">Categoría *</label>
+              <select class="form-select" id="prod-cat" required>
+                <option value="">-- Seleccione una categoría --</option>
+                <option value="Boxeo">Boxeo</option>
+                <option value="Fitness">Fitness</option>
+                <option value="Calzado">Calzado</option>
+                <option value="Accesorios">Accesorios</option>
+              </select>
+              <div id="error-prod-cat" class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-6">
+              <label for="prod-img" class="form-label fw-semibold small text-uppercase">URL Imagen <span class="text-muted fw-normal">(Opcional)</span></label>
+              <input type="url" class="form-control" id="prod-img" placeholder="https://images.unsplash.com/...">
+              <div class="form-text small">Si se deja vacío, tomará imagen por defecto.</div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2">
+            <a href="productos-lista.html" class="btn btn-outline-secondary px-4">Cancelar</a>
+            <button type="submit" class="btn btn-danger px-4 fw-bold">Guardar Producto</button>
+          </div>
+
+        </form>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- DEPENDENCIAS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/data.js"></script>
+  <script src="../js/validations.js"></script>
+
+  <script>
+    let editandoId = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. RBAC
+      const sesionRaw = localStorage.getItem("sportx_session");
+      if (!sesionRaw) { window.location.href = "../login.html"; return; }
+      const sesion = JSON.parse(sesionRaw);
+      if (sesion.rol === "Cliente") { window.location.href = "../index.html"; return; }
+
+      // 2. Verificar si es edición (?id=...)
+      const urlParams = new URLSearchParams(window.location.search);
+      editandoId = urlParams.get("id");
+
+      if (editandoId) {
+        document.getElementById("form-titulo").textContent = "Editar Producto";
+        cargarDatosProducto(editandoId);
+      }
+
+      // 3. Envío del formulario
+      const form = document.getElementById("form-producto");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let valido = true;
+
+        const cod = document.getElementById("prod-cod");
+        const errCod = document.getElementById("error-prod-cod");
+        const nom = document.getElementById("prod-nom");
+        const errNom = document.getElementById("error-prod-nom");
+        const desc = document.getElementById("prod-desc");
+        const errDesc = document.getElementById("error-prod-desc");
+        const prec = document.getElementById("prod-precio-input");
+        const errPrec = document.getElementById("error-prod-precio");
+        const stk = document.getElementById("prod-stock-input");
+        const errStk = document.getElementById("error-prod-stock");
+        const crit = document.getElementById("prod-critico-input");
+        const errCrit = document.getElementById("error-prod-critico");
+        const cat = document.getElementById("prod-cat");
+        const errCat = document.getElementById("error-prod-cat");
+
+        // Código (mínimo 3)
+        if (!cod.value.trim() || cod.value.trim().length < 3) {
+          setCampoInvalido(cod, errCod, "Código obligatorio (mínimo 3 caracteres).");
+          valido = false;
+        } else {
+          setCampoValido(cod, errCod);
+        }
+
+        // Nombre (máx 100)
+        if (!nom.value.trim()) {
+          setCampoInvalido(nom, errNom, "El nombre es obligatorio.");
+          valido = false;
+        } else if (nom.value.trim().length > 100) {
+          setCampoInvalido(nom, errNom, "Máximo 100 caracteres.");
+          valido = false;
+        } else {
+          setCampoValido(nom, errNom);
+        }
+
+        // Descripción (opcional, máx 500)
+        if (desc.value.trim().length > 500) {
+          setCampoInvalido(desc, errDesc, "Máximo 500 caracteres.");
+          valido = false;
+        } else {
+          setCampoValido(desc, errDesc);
+        }
+
+        // Precio (>= 0)
+        if (prec.value === "" || parseFloat(prec.value) < 0) {
+          setCampoInvalido(prec, errPrec, "El precio debe ser un número mayor o igual a 0.");
+          valido = false;
+        } else {
+          setCampoValido(prec, errPrec);
+        }
+
+        // Stock (entero >= 0)
+        if (stk.value === "" || parseInt(stk.value, 10) < 0) {
+          setCampoInvalido(stk, errStk, "El stock debe ser un entero mayor o igual a 0.");
+          valido = false;
+        } else {
+          setCampoValido(stk, errStk);
+        }
+
+        // Stock Crítico (opcional entero >= 0)
+        if (crit.value !== "" && parseInt(crit.value, 10) < 0) {
+          setCampoInvalido(crit, errCrit, "El stock crítico no puede ser negativo.");
+          valido = false;
+        } else {
+          setCampoValido(crit, errCrit);
+        }
+
+        // Categoría requerida
+        if (!cat.value) {
+          setCampoInvalido(cat, errCat, "Selecciona una categoría.");
+          valido = false;
+        } else {
+          setCampoValido(cat, errCat);
+        }
+
+        if (!valido) return;
+
+        // Guardar o Actualizar
+        const productos = JSON.parse(localStorage.getItem("sportx_products")) || PRODUCTOS_INICIALES;
+        const imgUrl = document.getElementById("prod-img").value.trim() || "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80";
+
+        if (editandoId) {
+          const index = productos.findIndex(p => p.id === editandoId);
+          if (index !== -1) {
+            productos[index].codigo = cod.value.trim();
+            productos[index].nombre = nom.value.trim();
+            productos[index].descripcion = desc.value.trim();
+            productos[index].precio = parseFloat(prec.value);
+            productos[index].stock = parseInt(stk.value, 10);
+            productos[index].stockCritico = crit.value ? parseInt(crit.value, 10) : 0;
+            productos[index].categoria = cat.value;
+            if (document.getElementById("prod-img").value.trim()) {
+              productos[index].imagen = imgUrl;
+            }
+          }
+        } else {
+          const nuevo = {
+            id: "PROD-" + Date.now().toString().slice(-4),
+            codigo: cod.value.trim(),
+            nombre: nom.value.trim(),
+            descripcion: desc.value.trim(),
+            precio: parseFloat(prec.value),
+            stock: parseInt(stk.value, 10),
+            stockCritico: crit.value ? parseInt(crit.value, 10) : 0,
+            categoria: cat.value,
+            imagen: imgUrl
+          };
+          productos.push(nuevo);
+        }
+
+        localStorage.setItem("sportx_products", JSON.stringify(productos));
+        window.location.href = "productos-lista.html";
+      });
+    });
+
+    function cargarDatosProducto(id) {
+      const productos = JSON.parse(localStorage.getItem("sportx_products")) || PRODUCTOS_INICIALES;
+      const prod = productos.find(p => p.id === id);
+      if (!prod) return;
+
+      document.getElementById("prod-cod").value = prod.codigo || prod.id;
+      document.getElementById("prod-nom").value = prod.nombre;
+      document.getElementById("prod-desc").value = prod.descripcion;
+      document.getElementById("prod-precio-input").value = prod.precio;
+      document.getElementById("prod-stock-input").value = prod.stock;
+      document.getElementById("prod-critico-input").value = prod.stockCritico;
+      document.getElementById("prod-cat").value = prod.categoria;
+      document.getElementById("prod-img").value = prod.imagen;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Detalle de producto y especificaciones técnicas en SportX Chile.">
+  <title>SportX Chile | Detalle del Producto</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- CSS Externo -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+  <!-- ENCABEZADO -->
+  <header class="sticky-top bg-white shadow-sm">
+    <div class="border-bottom bg-body-tertiary py-1">
+      <div class="container d-flex justify-content-between align-items-center small">
+        <span class="text-muted d-none d-md-inline">
+          <i class="bi bi-shield-check me-1 text-success"></i>Garantía oficial y cambio de talla gratuito
+        </span>
+        <div class="ms-auto">
+          <a href="login.html" class="text-decoration-none text-dark me-3">
+            <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar sesión
+          </a>
+          <a href="registro.html" class="text-decoration-none text-dark me-3">
+            <i class="bi bi-person-plus me-1"></i>Registrar usuario
+          </a>
+          <a href="admin/index.html" class="text-decoration-none text-primary fw-semibold">
+            <i class="bi bi-speedometer2 me-1"></i>Panel Admin
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center fw-bold fs-3 text-dark text-uppercase tracking-wider" href="index.html">
+          <i class="bi bi-lightning-charge-fill text-danger me-2"></i>Sport<span class="text-danger">X</span>
+        </a>
+
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menuNavegacion">
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold text-uppercase small">
+            <li class="nav-item"><a class="nav-link text-secondary" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link active text-danger" aria-current="page" href="productos.html">Productos</a></li>
+            <li class="nav-item"><a class="nav-link text-secondary" href="nosotros.html">Nosotros</a></li>
+            <li class="nav-item"><a class="nav-link text-secondary" href="blogs.html">Blogs</a></li>
+            <li class="nav-item"><a class="nav-link text-secondary" href="contacto.html">Contacto</a></li>
+          </ul>
+
+          <div class="d-flex align-items-center">
+            <a href="carrito.html" class="btn btn-outline-dark position-relative rounded-pill px-3 py-2">
+              <i class="bi bi-cart3 me-1"></i> Cart
+              <span id="cart-badge-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                0
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL: DETALLE TÉCNICO -->
+  <main class="flex-grow-1 py-5">
+    <div class="container">
+
+      <!-- Breadcrumbs de navegación -->
+      <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none text-muted">Home</a></li>
+          <li class="breadcrumb-item"><a href="productos.html" class="text-decoration-none text-muted">Productos</a></li>
+          <li class="breadcrumb-item active text-danger fw-semibold" aria-current="page" id="breadcrumb-actual">Cargando...</li>
+        </ol>
+      </nav>
+
+      <!-- Mensaje flotante de confirmación -->
+      <div id="alerta-agregado" class="alert alert-success d-none align-items-center mb-4" role="alert">
+        <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+        <div>
+          ¡Producto añadido al carrito con éxito! <a href="carrito.html" class="alert-link">Ir al carrito a pagar</a>.
+        </div>
+      </div>
+
+      <!-- Ficha de Producto Principal -->
+      <section class="card border-0 shadow-sm rounded-4 p-4 p-lg-5 bg-white mb-5">
+        <div class="row g-4 align-items-center">
+          
+          <!-- Galería de imágenes (principal + miniaturas) -->
+          <div class="col-lg-6">
+            <div class="text-center bg-light rounded-4 p-3 mb-3 border">
+              <img id="img-principal" src="" class="img-fluid rounded-3" style="max-height: 380px; object-fit: contain;" alt="Producto SportX">
+            </div>
+            <div class="d-flex gap-2 justify-content-center" id="galeria-miniaturas">
+              <!-- Miniaturas interactivas -->
+            </div>
+          </div>
+
+          <!-- Información y compra -->
+          <div class="col-lg-6 ps-lg-4">
+            <span id="prod-categoria-badge" class="badge bg-dark px-3 py-2 rounded-pill text-uppercase mb-2">Categoría</span>
+            <span id="prod-codigo" class="text-muted small ms-2">CÓDIGO: ---</span>
+            
+            <h1 id="prod-nombre" class="h2 fw-bold text-dark mt-2 mb-3">Nombre del Producto</h1>
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <span id="prod-precio" class="display-6 fw-bold text-danger">$0</span>
+              <span id="prod-stock-badge" class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">En Stock</span>
+            </div>
+
+            <p id="prod-descripcion" class="text-muted mb-4 lead fs-6">
+              Descripción completa del producto.
+            </p>
+
+            <hr class="my-4">
+
+            <!-- Selector de Cantidad y Botón de Acción -->
+            <form id="form-comprar" class="row g-3 align-items-center" onsubmit="event.preventDefault(); procesarCompra();">
+              <div class="col-sm-4">
+                <label for="input-cantidad" class="form-label small fw-bold text-uppercase">Cantidad</label>
+                <div class="input-group">
+                  <button type="button" class="btn btn-outline-secondary" onclick="ajustarCantidad(-1)">-</button>
+                  <input type="number" id="input-cantidad" class="form-control text-center" value="1" min="1" max="50" required>
+                  <button type="button" class="btn btn-outline-secondary" onclick="ajustarCantidad(1)">+</button>
+                </div>
+              </div>
+
+              <div class="col-sm-8 d-flex align-items-end">
+                <button type="submit" id="btn-add-cart" class="btn btn-danger btn-lg w-100 py-2 fw-semibold shadow-sm mt-3 mt-sm-0">
+                  <i class="bi bi-cart-plus me-2"></i>Añadir al carrito
+                </button>
+              </div>
+            </form>
+
+            <div class="mt-4 pt-3 border-top small text-muted d-flex flex-column gap-1">
+              <span><i class="bi bi-check2 text-success me-2"></i>Retiro disponible en sucursal Santiago Centro</span>
+              <span><i class="bi bi-truck text-muted me-2"></i>Despacho a todo Chile por Starken o Blue Express</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECCIÓN: PRODUCTOS RELACIONADOS -->
+      <section>
+        <h2 class="h4 fw-bold text-dark mb-3">Productos Relacionados</h2>
+        <div id="grilla-relacionados" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+          <!-- Inyectados por JS -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="bg-black text-white-50 pt-4 pb-3 border-top border-dark mt-auto">
+    <div class="container text-center small">
+      <p class="mb-1 text-white">Sport<span class="text-danger">X</span> Chile | Evaluación Parcial N° 1 - DSY1104 Duoc UC</p>
+      <p class="mb-0 text-white-50">Parámetros URL y control dinámico de inventario.</p>
+    </div>
+  </footer>
+
+  <!-- DEPENDENCIAS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+
+  <!-- LÓGICA DE DETALLE -->
+  <script>
+    let productoActual = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Contador del carrito
+      if (typeof actualizarContadorCarrito === "function") {
+        actualizarContadorCarrito();
+      }
+
+      // 2. Leer parámetro "id" desde la URL (ej: ?id=PROD-001)
+      const urlParams = new URLSearchParams(window.location.search);
+      const idBuscado = urlParams.get("id") || "PROD-001";
+
+      // 3. Obtener catálogo
+      const productosGuardados = JSON.parse(localStorage.getItem("sportx_products"));
+      const catalogo = (productosGuardados && productosGuardados.length > 0) ? productosGuardados : PRODUCTOS_INICIALES;
+
+      productoActual = catalogo.find(p => p.id === idBuscado) || catalogo[0];
+
+      // 4. Inyectar datos en el DOM
+      document.getElementById("breadcrumb-actual").textContent = productoActual.nombre;
+      document.getElementById("prod-categoria-badge").textContent = productoActual.categoria;
+      document.getElementById("prod-codigo").textContent = `CÓDIGO: ${productoActual.codigo || productoActual.id}`;
+      document.getElementById("prod-nombre").textContent = productoActual.nombre;
+      document.getElementById("prod-descripcion").textContent = productoActual.descripcion;
+
+      const precioTexto = productoActual.precio === 0 ? "FREE" : `$${productoActual.precio.toLocaleString("es-CL")}`;
+      document.getElementById("prod-precio").textContent = precioTexto;
+      if (productoActual.precio === 0) {
+        document.getElementById("prod-precio").className = "display-6 fw-bold text-success";
+      }
+
+      // Stock
+      const stockBadge = document.getElementById("prod-stock-badge");
+      if (productoActual.stock <= 0) {
+        stockBadge.textContent = "Sin Stock";
+        stockBadge.className = "badge bg-secondary px-2 py-1";
+        document.getElementById("btn-add-cart").disabled = true;
+      } else if (productoActual.stock <= productoActual.stockCritico) {
+        stockBadge.textContent = `Stock Crítico (${productoActual.stock} unid.)`;
+        stockBadge.className = "badge bg-danger px-2 py-1";
+      } else {
+        stockBadge.textContent = `Disponible (${productoActual.stock} unid.)`;
+      }
+
+      // Galería
+      const imgPrincipal = document.getElementById("img-principal");
+      imgPrincipal.src = productoActual.imagen;
+      imgPrincipal.onerror = () => { imgPrincipal.src = "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80"; };
+
+      const contenedorMiniaturas = document.getElementById("galeria-miniaturas");
+      // Miniaturas de apoyo
+      const fotosMock = [
+        productoActual.imagen,
+        "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&w=200&q=80",
+        "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=200&q=80"
+      ];
+      contenedorMiniaturas.innerHTML = "";
+      fotosMock.forEach((foto, i) => {
+        const thumb = document.createElement("img");
+        thumb.src = foto;
+        thumb.className = `img-thumbnail rounded cursor-pointer ${i === 0 ? 'border-danger' : ''}`;
+        thumb.style.width = "65px";
+        thumb.style.height = "65px";
+        thumb.style.objectFit = "cover";
+        thumb.onclick = () => {
+          imgPrincipal.src = foto;
+          contenedorMiniaturas.querySelectorAll("img").forEach(im => im.classList.remove("border-danger"));
+          thumb.classList.add("border-danger");
+        };
+        contenedorMiniaturas.appendChild(thumb);
+      });
+
+      // 5. Renderizar productos relacionados (misma categoría o diferentes)
+      const relacionados = catalogo.filter(p => p.id !== productoActual.id).slice(0, 4);
+      const grillaRel = document.getElementById("grilla-relacionados");
+      grillaRel.innerHTML = "";
+      relacionados.forEach(item => {
+        const pRel = item.precio === 0 ? "FREE" : `$${item.precio.toLocaleString("es-CL")}`;
+        grillaRel.innerHTML += `
+          <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-3 p-2 tarjeta-producto">
+              <img src="${item.imagen}" class="card-img-top rounded" style="height: 140px; object-fit: cover;" alt="${item.nombre}" onerror="this.src='https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=80'">
+              <div class="card-body p-2 d-flex flex-column">
+                <small class="fw-bold text-truncate">${item.nombre}</small>
+                <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
+                  <span class="text-danger fw-bold small">${pRel}</span>
+                  <a href="producto-detalle.html?id=${item.id}" class="btn btn-sm btn-outline-dark p-1" aria-label="Ver producto"><i class="bi bi-arrow-right"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    });
+
+    function ajustarCantidad(cambio) {
+      const input = document.getElementById("input-cantidad");
+      let val = parseInt(input.value, 10) || 1;
+      val += cambio;
+      if (val < 1) val = 1;
+      if (productoActual && val > productoActual.stock) val = productoActual.stock;
+      input.value = val;
+    }
+
+    function procesarCompra() {
+      if (!productoActual) return;
+      const cant = parseInt(document.getElementById("input-cantidad").value, 10) || 1;
+      
+      if (typeof agregarAlCarrito === "function") {
+        agregarAlCarrito(productoActual.id, cant);
+      }
+
+      const alerta = document.getElementById("alerta-agregado");
+      alerta.classList.remove("d-none");
+      alerta.classList.add("d-flex");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SportX Admin | Formulario de Usuario</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- CSS Externo -->
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="bg-light">
+
+  <div class="d-flex min-vh-100">
+
+    <!-- SIDEBAR -->
+    <aside class="bg-white border-end d-flex flex-column p-3" style="width: 260px; min-width: 260px;">
+      <a href="index.html" class="d-flex align-items-center text-dark text-decoration-none fw-bold fs-4 text-uppercase mb-4 px-2 tracking-wider">
+        <i class="bi bi-lightning-charge-fill text-danger me-2"></i>Sport<span class="text-danger">X</span>
+      </a>
+
+      <ul class="nav nav-pills flex-column mb-auto gap-1">
+        <li class="nav-item"><a href="index.html" class="nav-link text-secondary"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+        <li class="nav-item"><a href="productos-lista.html" class="nav-link text-secondary"><i class="bi bi-box-seam me-2"></i>Productos</a></li>
+        <li class="nav-item"><a href="usuarios-lista.html" class="nav-link active bg-danger text-white"><i class="bi bi-people me-2"></i>Usuarios</a></li>
+        <li class="nav-item"><a href="../index.html" class="nav-link text-secondary" target="_blank"><i class="bi bi-shop me-2"></i>Ir a la Tienda</a></li>
+      </ul>
+      <hr>
+      <div class="small text-muted px-2">SportX Chile</div>
+    </aside>
+
+    <!-- ÁREA DE TRABAJO -->
+    <main class="flex-grow-1 p-4 overflow-auto">
+      
+      <div class="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom">
+        <div>
+          <h1 class="h3 fw-bold text-dark mb-0" id="form-user-titulo">NUEVO USUARIO</h1>
+          <small class="text-muted">Asignación de perfiles, permisos y datos de localización</small>
+        </div>
+        <a href="usuarios-lista.html" class="btn btn-outline-secondary small">
+          <i class="bi bi-arrow-left me-1"></i>Volver al listado
+        </a>
+      </div>
+
+      <div class="card border-0 shadow-sm rounded-4 bg-white p-4 col-lg-9 mx-auto">
+        <form id="form-usuario-admin" novalidate>
+          
+          <!-- RUN y Perfil/Rol -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="usr-run" class="form-label fw-semibold small text-uppercase">RUN (Sin puntos ni guion) *</label>
+              <input type="text" class="form-control" id="usr-run" placeholder="Ej: 19011022K" maxlength="9" required>
+              <div id="error-usr-run" class="invalid-feedback"></div>
+              <div class="form-text small">7 a 9 caracteres alfanuméricos.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="usr-rol" class="form-label fw-semibold small text-uppercase">Tipo de Usuario (Rol) *</label>
+              <select class="form-select" id="usr-rol" required>
+                <option value="">-- Seleccionar Rol --</option>
+                <option value="Administrador">Administrador (Acceso Total)</option>
+                <option value="Vendedor">Vendedor (Catálogo y Órdenes)</option>
+                <option value="Cliente">Cliente (Tienda Pública)</option>
+              </select>
+              <div id="error-usr-rol" class="invalid-feedback"></div>
+            </div>
+          </div>
+
+          <!-- Nombre y Apellidos -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="usr-nom" class="form-label fw-semibold small text-uppercase">Nombre *</label>
+              <input type="text" class="form-control" id="usr-nom" placeholder="Nombre" maxlength="50" required>
+              <div id="error-usr-nom" class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-6">
+              <label for="usr-ape" class="form-label fw-semibold small text-uppercase">Apellidos *</label>
+              <input type="text" class="form-control" id="usr-ape" placeholder="Apellidos" maxlength="100" required>
+              <div id="error-usr-ape" class="invalid-feedback"></div>
+            </div>
+          </div>
+
+          <!-- Correo y Contraseña -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="usr-email" class="form-label fw-semibold small text-uppercase">Correo Electrónico *</label>
+              <input type="email" class="form-control" id="usr-email" placeholder="usuario@duoc.cl o @gmail.com" maxlength="100" required>
+              <div id="error-usr-email" class="invalid-feedback"></div>
+              <div class="form-text small">Permitidos: @duoc.cl, @profesor.duoc.cl, @gmail.com</div>
+            </div>
+            <div class="col-md-6">
+              <label for="usr-pass" class="form-label fw-semibold small text-uppercase">Contraseña *</label>
+              <input type="password" class="form-control" id="usr-pass" placeholder="Entre 4 y 10 caracteres" maxlength="10" required>
+              <div id="error-usr-pass" class="invalid-feedback"></div>
+            </div>
+          </div>
+
+          <!-- Fecha de Nacimiento y Teléfono -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="usr-fecha-nac" class="form-label fw-semibold small text-uppercase">Fecha de Nacimiento <span class="text-muted fw-normal">(Opcional)</span></label>
+              <input type="date" class="form-control" id="usr-fecha-nac">
+            </div>
+            <div class="col-md-6">
+              <label for="usr-tel" class="form-label fw-semibold small text-uppercase">Teléfono <span class="text-muted fw-normal">(Opcional)</span></label>
+              <input type="tel" class="form-control" id="usr-tel" placeholder="+56 9 1234 5678" maxlength="15">
+            </div>
+          </div>
+
+          <!-- Región y Comuna (Selects Dinámicos) -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="usr-region" class="form-label fw-semibold small text-uppercase">Región *</label>
+              <select class="form-select" id="usr-region" required>
+                <option value="">-- Seleccione región --</option>
+              </select>
+              <div id="error-usr-region" class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-6">
+              <label for="usr-comuna" class="form-label fw-semibold small text-uppercase">Comuna *</label>
+              <select class="form-select" id="usr-comuna" required disabled>
+                <option value="">-- Primero elija una región --</option>
+              </select>
+              <div id="error-usr-comuna" class="invalid-feedback"></div>
+            </div>
+          </div>
+
+          <!-- Dirección -->
+          <div class="mb-4">
+            <label for="usr-dir" class="form-label fw-semibold small text-uppercase">Dirección *</label>
+            <textarea class="form-control" id="usr-dir" rows="2" placeholder="Calle, número, departamento (máximo 300 caracteres)" maxlength="300" required></textarea>
+            <div id="error-usr-dir" class="invalid-feedback"></div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2">
+            <a href="usuarios-lista.html" class="btn btn-outline-secondary px-4">Cancelar</a>
+            <button type="submit" class="btn btn-danger px-4 fw-bold">Guardar Usuario</button>
+          </div>
+
+        </form>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- DEPENDENCIAS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/data.js"></script>
+  <script src="../js/validations.js"></script>
+
+  <script>
+    let editandoRun = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. RBAC: Solo Administrador
+      const sesionRaw = localStorage.getItem("sportx_session");
+      if (!sesionRaw) { window.location.href = "../login.html"; return; }
+      const sesion = JSON.parse(sesionRaw);
+      if (sesion.rol !== "Administrador") {
+        window.location.href = "index.html";
+        return;
+      }
+
+      // 2. Cargar selects de región y comuna
+      if (typeof inicializarSelectsUbicacion === "function") {
+        inicializarSelectsUbicacion("usr-region", "usr-comuna");
+      }
+
+      // 3. Verificar si es edición (?run=...)
+      const urlParams = new URLSearchParams(window.location.search);
+      editandoRun = urlParams.get("run");
+
+      if (editandoRun) {
+        document.getElementById("form-user-titulo").textContent = "EDITAR USUARIO";
+        document.getElementById("usr-run").disabled = true; // El RUN es clave única
+        cargarDatosUsuario(editandoRun);
+      }
+
+      // 4. Envío y validaciones
+      const form = document.getElementById("form-usuario-admin");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let esValido = true;
+
+        const run = document.getElementById("usr-run");
+        const errRun = document.getElementById("error-usr-run");
+        const rol = document.getElementById("usr-rol");
+        const errRol = document.getElementById("error-usr-rol");
+        const nom = document.getElementById("usr-nom");
+        const errNom = document.getElementById("error-usr-nom");
+        const ape = document.getElementById("usr-ape");
+        const errApe = document.getElementById("error-usr-ape");
+        const email = document.getElementById("usr-email");
+        const errEmail = document.getElementById("error-usr-email");
+        const pass = document.getElementById("usr-pass");
+        const errPass = document.getElementById("error-usr-pass");
+        const reg = document.getElementById("usr-region");
+        const errReg = document.getElementById("error-usr-region");
+        const com = document.getElementById("usr-comuna");
+        const errCom = document.getElementById("error-usr-comuna");
+        const dir = document.getElementById("usr-dir");
+        const errDir = document.getElementById("error-usr-dir");
+
+        // RUN
+        const runClean = run.value.trim().replace(/\./g, "").replace(/-/g, "");
+        if (!runClean || !validarRunChileno(runClean)) {
+          setCampoInvalido(run, errRun, "RUN chileno inválido (7-9 dígitos sin puntos ni guion).");
+          esValido = false;
+        } else {
+          setCampoValido(run, errRun);
+        }
+
+        // Rol
+        if (!rol.value) {
+          setCampoInvalido(rol, errRol, "Selecciona un rol.");
+          esValido = false;
+        } else {
+          setCampoValido(rol, errRol);
+        }
+
+        // Nombre
+        if (!nom.value.trim() || nom.value.trim().length > 50) {
+          setCampoInvalido(nom, errNom, "Nombre requerido (máx 50).");
+          esValido = false;
+        } else {
+          setCampoValido(nom, errNom);
+        }
+
+        // Apellidos
+        if (!ape.value.trim() || ape.value.trim().length > 100) {
+          setCampoInvalido(ape, errApe, "Apellidos requeridos (máx 100).");
+          esValido = false;
+        } else {
+          setCampoValido(ape, errApe);
+        }
+
+        // Email
+        const emailVal = email.value.trim();
+        if (!emailVal || emailVal.length > 100 || !validarEmailDominio(emailVal)) {
+          setCampoInvalido(email, errEmail, "Correo no válido. Solo dominios @duoc.cl, @profesor.duoc.cl o @gmail.com");
+          esValido = false;
+        } else {
+          setCampoValido(email, errEmail);
+        }
+
+        // Password (4 a 10)
+        if (!pass.value || pass.value.length < 4 || pass.value.length > 10) {
+          setCampoInvalido(pass, errPass, "Contraseña requerida (4 a 10 caracteres).");
+          esValido = false;
+        } else {
+          setCampoValido(pass, errPass);
+        }
+
+        // Región y Comuna
+        if (!reg.value) {
+          setCampoInvalido(reg, errReg, "Selecciona una región.");
+          esValido = false;
+        } else {
+          setCampoValido(reg, errReg);
+        }
+
+        if (!com.value) {
+          setCampoInvalido(com, errCom, "Selecciona una comuna.");
+          esValido = false;
+        } else {
+          setCampoValido(com, errCom);
+        }
+
+        // Dirección
+        if (!dir.value.trim() || dir.value.trim().length > 300) {
+          setCampoInvalido(dir, errDir, "Dirección requerida (máx 300 caracteres).");
+          esValido = false;
+        } else {
+          setCampoValido(dir, errDir);
+        }
+
+        if (!esValido) return;
+
+        // Guardar o Actualizar
+        const usuarios = JSON.parse(localStorage.getItem("sportx_users")) || [];
+
+        if (editandoRun) {
+          const index = usuarios.findIndex(u => u.run.toUpperCase() === editandoRun.toUpperCase());
+          if (index !== -1) {
+            usuarios[index].rol = rol.value;
+            usuarios[index].nombre = nom.value.trim();
+            usuarios[index].apellidos = ape.value.trim();
+            usuarios[index].correo = emailVal.toLowerCase();
+            usuarios[index].password = pass.value;
+            usuarios[index].fechaNacimiento = document.getElementById("usr-fecha-nac").value;
+            usuarios[index].telefono = document.getElementById("usr-tel").value.trim();
+            usuarios[index].region = reg.value;
+            usuarios[index].comuna = com.value;
+            usuarios[index].direccion = dir.value.trim();
+          }
+        } else {
+          // Verificar RUN duplicado
+          if (usuarios.some(u => u.run.toUpperCase() === runClean.toUpperCase())) {
+            setCampoInvalido(run, errRun, "Ya existe un usuario registrado con este RUN.");
+            return;
+          }
+
+          const nuevoUsuario = {
+            run: runClean.toUpperCase(),
+            rol: rol.value,
+            nombre: nom.value.trim(),
+            apellidos: ape.value.trim(),
+            correo: emailVal.toLowerCase(),
+            password: pass.value,
+            fechaNacimiento: document.getElementById("usr-fecha-nac").value,
+            telefono: document.getElementById("usr-tel").value.trim(),
+            region: reg.value,
+            comuna: com.value,
+            direccion: dir.value.trim()
+          };
+          usuarios.push(nuevoUsuario);
+        }
+
+        localStorage.setItem("sportx_users", JSON.stringify(usuarios));
+        window.location.href = "usuarios-lista.html";
+      });
+    });
+
+    function cargarDatosUsuario(run) {
+      const usuarios = JSON.parse(localStorage.getItem("sportx_users")) || [];
+      const user = usuarios.find(u => u.run.toUpperCase() === run.toUpperCase());
+      if (!user) return;
+
+      document.getElementById("usr-run").value = user.run;
+      document.getElementById("usr-rol").value = user.rol;
+      document.getElementById("usr-nom").value = user.nombre;
+      document.getElementById("usr-ape").value = user.apellidos;
+      document.getElementById("usr-email").value = user.correo;
+      document.getElementById("usr-pass").value = user.password;
+      document.getElementById("usr-fecha-nac").value = user.fechaNacimiento || "";
+      document.getElementById("usr-tel").value = user.telefono || "";
+      document.getElementById("usr-dir").value = user.direccion;
+
+      // Asignar región y disparar evento change para cargar comunas
+      const selectReg = document.getElementById("usr-region");
+      selectReg.value = user.region;
+      selectReg.dispatchEvent(new Event("change"));
+
+      setTimeout(() => {
+        document.getElementById("usr-comuna").value = user.comuna;
+      }, 50);
+    }
+  </script>
+</body>
+</html>
