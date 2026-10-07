@@ -1,5 +1,58 @@
-import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useShop } from '../context/ShopContext';
-import { money, fallbackImage } from '../data/seed';
-export default function Detail() { const {id} = useParams(); const {products,add} = useShop(); const [quantity,setQuantity] = useState(1); const p = products.find(p => p.id === id); if (!p) return <><h1>Producto no encontrado</h1><Link to="/productos">Volver al catálogo</Link></>; return <div className="row g-4"><div className="col-md-6"><img src={p.imagen || fallbackImage} onError={e => {e.currentTarget.onerror=null; e.currentTarget.src=fallbackImage;}} alt={p.nombre} className="img-fluid rounded-4 w-100"/></div><div className="col-md-6"><p className="text-danger">{p.categoria}</p><h1>{p.nombre}</h1><p>{p.descripcion}</p><p className="fs-3 fw-bold">{money(p.precio)}</p><p>Stock: {p.stock}</p><label htmlFor="quantity" className="form-label">Cantidad</label><input id="quantity" type="number" min="1" max={p.stock} className="form-control mb-3" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/><button className="btn btn-danger" disabled={p.stock <= 0} onClick={() => add(p.id,quantity)}>Agregar al carrito</button></div></div>; }
+import { useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { useShop } from "../context/ShopContext.jsx";
+import { money, fallbackImage } from "../data/seed.js";
+export default function Detail() {
+  const { id } = useParams();
+  const { products, add } = useShop();
+  const [quantity, setQuantity] = useState(1);
+  const p = products.find((p) => p.id === id);
+  if (!p)
+    return (
+      <>
+        <h1>Producto no encontrado</h1>
+        <Link to="/productos">Volver al catálogo</Link>
+      </>
+    );
+  return (
+    <div className="row g-4">
+      <div className="col-md-6">
+        <img
+          src={p.imagen || fallbackImage}
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = fallbackImage;
+          }}
+          alt={p.nombre}
+          className="img-fluid rounded-4 w-100"
+        />
+      </div>
+      <div className="col-md-6">
+        <p className="text-danger">{p.categoria}</p>
+        <h1>{p.nombre}</h1>
+        <p>{p.descripcion}</p>
+        <p className="fs-3 fw-bold">{money(p.precio)}</p>
+        <p>Stock: {p.stock}</p>
+        <label htmlFor="quantity" className="form-label">
+          Cantidad
+        </label>
+        <input
+          id="quantity"
+          type="number"
+          min="1"
+          max={p.stock}
+          className="form-control mb-3"
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+        />
+        <button
+          className="btn btn-danger"
+          disabled={p.stock <= 0}
+          onClick={() => add(p.id, quantity)}
+        >
+          Agregar al carrito
+        </button>
+      </div>
+    </div>
+  );
+}

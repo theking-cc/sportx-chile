@@ -1,10 +1,32 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { addItem, total } from '../src/services/cart.js';
-const product = {id:'P1', nombre:'Guantes',precio:10000,stock:2};
-test('agrega un producto nuevo sin modificar el arreglo original', () => { const cart=[]; assert.equal(addItem(cart,product)[0].cantidad,1);assert.equal(cart.length,0); });
-test('acumula cantidades de un mismo producto', () => {const cart=addItem([],product);assert.equal(addItem(cart,product)[0].cantidad,2);});
-test('rechaza cantidades superiores al stock acumulado', () => {assert.throws(() => addItem(addItem([],product,2),product),/stock/);});
-test('rechaza cantidades negativas o decimales', () => {for(const quantity of [-1,0,1.5,NaN])assert.throws(() => addItem([],product,quantity),/entero/);});
-test('aplica descuentos porcentuales', () => {assert.deepEqual(total(addItem([],product),{tipo:'porcentaje',descuento:0.1}),{subtotal:10000,descuento:1000,total:9000});});
-test('limita un descuento fijo al subtotal', () => {assert.equal(total(addItem([],product),{tipo:'fijo',descuento:20000}).total,0);});
+import test from "node:test";
+import assert from "node:assert/strict";
+import { addItem, total } from "../src/services/cart.js";
+const product = { id: "P1", nombre: "Guantes", precio: 10000, stock: 2 };
+test("agrega un producto nuevo sin modificar el arreglo original", () => {
+  const cart = [];
+  assert.equal(addItem(cart, product)[0].cantidad, 1);
+  assert.equal(cart.length, 0);
+});
+test("acumula cantidades de un mismo producto", () => {
+  const cart = addItem([], product);
+  assert.equal(addItem(cart, product)[0].cantidad, 2);
+});
+test("rechaza cantidades superiores al stock acumulado", () => {
+  assert.throws(() => addItem(addItem([], product, 2), product), /stock/);
+});
+test("rechaza cantidades negativas o decimales", () => {
+  for (const quantity of [-1, 0, 1.5, NaN])
+    assert.throws(() => addItem([], product, quantity), /entero/);
+});
+test("aplica descuentos porcentuales", () => {
+  assert.deepEqual(
+    total(addItem([], product), { tipo: "porcentaje", descuento: 0.1 }),
+    { subtotal: 10000, descuento: 1000, total: 9000 },
+  );
+});
+test("limita un descuento fijo al subtotal", () => {
+  assert.equal(
+    total(addItem([], product), { tipo: "fijo", descuento: 20000 }).total,
+    0,
+  );
+});

@@ -1,59 +1,96 @@
-# SportX Chile
+# SportX Chile - Evaluación Parcial 2
 
-## Migración a React: primera etapa
+Frontend de tienda deportiva migrado a **React + Vite + Bootstrap**, con 21 vistas y persistencia en localStorage. El prototipo HTML anterior permanece en la raíz como referencia. La aplicación actual está en `frontend/`.
 
-El frontend nuevo está en `frontend/`. El prototipo HTML anterior sigue disponible en la raíz para consultar y comparar.
+## Ejecutar en VS Code
 
-### Ejecutar en VS Code
-
-Instala Node.js 22.12 o superior (o Node.js 24 LTS), abre la carpeta del repositorio y ejecuta:
+Requiere Node.js 22.12 o superior (recomendado Node.js 24 LTS).
 
 ```sh
+git fetch origin
+git switch migracion-react
+git pull --ff-only origin migracion-react
 cd frontend
 npm install
 npm run dev
 ```
 
-Abre la dirección que muestra Vite. No uses Live Server para ejecutar este frontend.
+Abre la dirección que muestra Vite. No uses Live Server para este frontend.
 
 ```sh
 npm run build
 npm run preview
+npm test
 npm run test:logic
 ```
 
-### Qué se migró
+`npm test` usa Jasmine/Karma y Chrome instalado en tu computador. Genera `frontend/coverage/html/index.html`. Si Chrome no se detecta en Windows, antes de ejecutar las pruebas usa en PowerShell:
 
-- Inicio, catálogo con búsqueda y categorías, detalle del producto y carrito.
-- Componentes reutilizables con propiedades y estados React.
-- Navegación con HashRouter, compatible con hosting estático.
-- Bootstrap y menú adaptable a pantallas pequeñas.
-- Servicio de lectura/escritura de localStorage y lógica de carrito separada.
-- Control de cantidades acumuladas frente al stock y descuentos.
-- Las tarjetas de inicio usan el mismo catálogo que las otras páginas.
-- Imágenes iniciales corregidas y alternativa visual si una imagen falla.
+```powershell
+$env:CHROME_BIN = 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+npm test
+```
 
-Se conservan las claves `sportx_products` y `sportx_cart_items`. Para leer datos del prototipo anterior, ambos deben ejecutarse en el mismo origen (protocolo, dominio y puerto). Si cambias de Live Server a Vite, los datos no se transfieren automáticamente. No borres los datos anteriores: más adelante prepararemos la exportación/importación.
+Si Chrome está en otra carpeta, ajusta esa ruta.
 
-### Pendientes de la siguiente etapa
+Para repetir el recorrido completo de navegador, desde `frontend/`:
 
-1. Login, registro, formularios y panel administrativo en React.
-2. Contenido de Nosotros, Blogs y Contacto. Estas rutas muestran explícitamente que están pendientes.
-3. Registro de pedidos y actualización del inventario.
-4. Jasmine/Karma: diez pruebas de componentes, mocks e informe de cobertura. Las seis pruebas actuales con Node verifican únicamente lógica del carrito y no reemplazan lo exigido por la evaluación.
-5. ERS, documento de testing y entrega comprimida.
-6. Backend y migración de datos a MySQL.
+```sh
+npx playwright install chromium
+npm run test:e2e
+```
 
-### Conexión futura a MySQL
+El recorrido crea datos de prueba en un navegador aislado, comprueba los flujos de las 21 vistas y guarda dos capturas en `tests/browser-output/`. No cambia los datos de tu navegador habitual. Arranca su propio servidor Vite en el puerto 4175.
 
-React utilizará una API del backend; no se conectará directamente a MySQL. `src/services/` concentra el acceso a los datos para facilitar esa sustitución. Antes de migrar se debe exportar y validar productos y usuarios existentes. Las contraseñas y permisos deberán gestionarse en el backend.
+## Acceso de demostración
 
-### Estructura
+En Iniciar sesión, abre **Acceso de demostración** y elige **Entrar como Administrador**, **Entrar como Vendedor** o **Entrar como Cliente**. Son cuentas ficticias para probar los roles y no publican contraseñas. El formulario de login también permite entrar con cuentas que registres tú mismo.
 
-- `src/components/`: Navbar y ProductCard.
-- `src/pages/`: Home, Catalog, Detail y Cart.
-- `src/context/ShopContext.jsx`: estado compartido del carrito.
-- `src/services/`: productos, almacenamiento y cálculos del carrito.
-- `src/data/seed.js`: datos iniciales, cupones y regiones.
+Las cuentas demo se incluyen al inicializar los datos. Si se editan o eliminan después, se respeta ese cambio.
 
-Documentación: https://react.dev/ y https://vite.dev/guide/.
+## Funcionalidades
+
+- 21 vistas: tienda, cuenta del cliente y administración.
+- Catálogo compartido con filtros, detalle, cantidades y alertas de stock.
+- Carrito, cupones, checkout simulado, confirmación e historial.
+- Al confirmar, pedido, stock y carrito se guardan mediante una sola escritura.
+- Cancelación administrativa con devolución de stock una sola vez.
+- Login, registro con RUN y correo, perfil editable y permisos por rol.
+- CRUD de productos y usuarios, panel con datos reales del prototipo y gestión de pedidos.
+- Contacto guardado localmente y visible para el administrador.
+- Respaldo JSON desde el panel administrativo para preparar la migración posterior.
+- Bootstrap responsivo, navegación con HashRouter y estados/propiedades React.
+
+## Datos y migración
+
+La versión actual usa `sportx_state_v2` para productos, usuarios, carrito, pedidos y consultas. La sesión guarda únicamente el ID en `sportx_session_v2`. Al iniciar por primera vez se leen `sportx_products`, `sportx_users` y `sportx_cart_items` si existen en el mismo origen. Las claves anteriores no se borran. Una vez creado el documento v2, este es la fuente de datos de la aplicación.
+
+**Cambiar de Live Server a Vite cambia el origen y no transfiere automáticamente los datos.** Conserva el almacenamiento anterior y exporta tus datos antes de la migración. El panel exporta un respaldo de la versión actual; todavía no hay un importador de respaldos externos.
+
+El prototipo conserva las contraseñas de las cuentas registradas en datos locales y comprueba roles en el frontend. Este acceso sirve para la evaluación, no constituye autenticación segura para producción. En la etapa MySQL se implementarán hashing de contraseñas, autenticación y autorización en el backend. React se comunicará con una API, no directamente con MySQL.
+
+No hay cobros reales, servicio de despacho ni envío de correos. Las fotos se cargan desde URLs externas; si fallan se muestra una imagen alternativa local incluida en el código.
+
+## Documentación para la evaluación
+
+- [Inventario de 21 vistas](docs/VISTAS.md)
+- [ERS: propuesta de requisitos](docs/ERS.md)
+- [Cobertura y resultados de testing](docs/COBERTURA_TESTING.md)
+- [Evidencia de ejecución](docs/EVIDENCIA_TESTING.txt)
+- [Guion de presentación](docs/PRESENTACION.md)
+- [Plan de conexión a MySQL](docs/MIGRACION_MYSQL.md)
+
+El ERS es la propuesta basada en este proyecto; revisa que coincida con los requisitos particulares que haya indicado tu profesor. MySQL se conectará después de revisar el esquema existente del usuario.
+
+## Estructura del frontend
+
+- `src/components/`: controles compartidos, navegación, validación visual y protección de rutas.
+- `src/pages/`: 21 pantallas.
+- `src/context/ShopContext.jsx`: estado compartido y operaciones de la aplicación.
+- `src/services/repository.js`: operaciones de usuarios, catálogo, pedidos y contactos.
+- `src/services/storage.js`: lectura/escritura de localStorage.
+- `src/services/cart.js`: cantidades y cálculos de descuentos.
+- `src/services/validation.js`: reglas de formularios.
+- `tests/`: componentes, regresiones, vistas y recorrido de navegador.
+
+Documentación oficial: https://react.dev/, https://vite.dev/guide/, https://jasmine.github.io/ y https://karma-runner.github.io/6.4/index.html.

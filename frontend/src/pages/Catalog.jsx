@@ -1,4 +1,54 @@
-import { useState } from 'react';
-import { useShop } from '../context/ShopContext';
-import ProductCard from '../components/ProductCard';
-export default function Catalog() { const {products} = useShop(); const [search,setSearch] = useState(''); const [category,setCategory] = useState(''); const filtered = products.filter(p => (!category || p.categoria === category) && p.nombre.toLowerCase().includes(search.toLowerCase())); return <><h1 className="mb-4">Nuestros productos</h1><div className="row g-3 mb-4"><div className="col-md-8"><label htmlFor="search" className="form-label">Buscar producto</label><input id="search" className="form-control" value={search} onChange={e => setSearch(e.target.value)} placeholder="Nombre del producto"/></div><div className="col-md-4"><label htmlFor="category" className="form-label">Categoría</label><select id="category" className="form-select" value={category} onChange={e => setCategory(e.target.value)}><option value="">Todas</option>{[...new Set(products.map(p => p.categoria))].map(c => <option key={c}>{c}</option>)}</select></div></div><div className="row g-4">{filtered.map(p => <ProductCard key={p.id} product={p}/>)}</div>{!filtered.length && <p role="status">No encontramos productos.</p>}</>; }
+import { useState } from "react";
+import { useShop } from "../context/ShopContext.jsx";
+import ProductCard from "../components/ProductCard.jsx";
+export default function Catalog() {
+  const { products } = useShop();
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const filtered = products.filter(
+    (p) =>
+      (!category || p.categoria === category) &&
+      p.nombre.toLowerCase().includes(search.toLowerCase()),
+  );
+  return (
+    <>
+      <h1 className="mb-4">Nuestros productos</h1>
+      <div className="row g-3 mb-4">
+        <div className="col-md-8">
+          <label htmlFor="search" className="form-label">
+            Buscar producto
+          </label>
+          <input
+            id="search"
+            className="form-control"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Nombre del producto"
+          />
+        </div>
+        <div className="col-md-4">
+          <label htmlFor="category" className="form-label">
+            Categoría
+          </label>
+          <select
+            id="category"
+            className="form-select"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="">Todas</option>
+            {[...new Set(products.map((p) => p.categoria))].map((c) => (
+              <option key={c}>{c}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className="row g-4">
+        {filtered.map((p) => (
+          <ProductCard key={p.id} product={p} />
+        ))}
+      </div>
+      {!filtered.length && <p role="status">No encontramos productos.</p>}
+    </>
+  );
+}
