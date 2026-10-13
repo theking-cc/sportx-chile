@@ -1,3 +1,4 @@
+
 package sportx_api.repository;
 
 import java.util.List;
@@ -18,4 +19,10 @@ public interface ProductoRepository
     @EntityGraph(attributePaths = "categoria")
     Optional<Producto>
         findByIdAndActivoTrueAndCategoria_ActivoTrue(Long id);
+
+    boolean existsByCodigoIgnoreCase(String codigo);
+
+    boolean existsByCodigoIgnoreCaseAndIdNot(
+        String codigo, Long id
+    );
 }
