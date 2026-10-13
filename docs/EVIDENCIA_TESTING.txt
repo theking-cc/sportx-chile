@@ -1,0 +1,64 @@
+SportX Chile - Ejecución Jasmine/Karma - 7 de octubre de 2026
+Comando local: npm test
+Entorno de verificación: Node 24, Chromium 153 headless
+Todos los usuarios, correos y valores de prueba son ficticios. No se utilizaron datos personales reales.
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> sportx-react@1.0.0 test
+> karma start karma.conf.cjs
+
+Webpack bundling...
+asset commons.js 6.11 MiB [emitted] (name: commons) (id hint: commons)
+asset runtime.js 19.2 KiB [emitted] (name: runtime)
+asset components.spec.2019012573.js 447 bytes [emitted] (name: components.spec.2019012573)
+asset repository.spec.2577600903.js 447 bytes [emitted] (name: repository.spec.2577600903)
+asset pages.spec.3210742902.js 437 bytes [emitted] (name: pages.spec.3210742902)
+Entrypoint components.spec.2019012573 6.13 MiB = runtime.js 19.2 KiB commons.js 6.11 MiB components.spec.2019012573.js 447 bytes
+Entrypoint pages.spec.3210742902 6.13 MiB = runtime.js 19.2 KiB commons.js 6.11 MiB pages.spec.3210742902.js 437 bytes
+Entrypoint repository.spec.2577600903 6.13 MiB = runtime.js 19.2 KiB commons.js 6.11 MiB repository.spec.2577600903.js 447 bytes
+webpack 5.111.1 compiled successfully in 1816 ms
+07 10 2026 17:04:58.546:INFO [karma-server]: Karma v6.4.4 server started at http://localhost:9876/
+07 10 2026 17:04:58.547:INFO [launcher]: Launching browsers ChromeHeadlessCI with concurrency unlimited
+07 10 2026 17:04:58.549:INFO [launcher]: Starting browser ChromeHeadless
+07 10 2026 17:04:58.663:INFO [Chrome Headless 153.0.8010.0 (Linux 0.0.0)]: Connected on socket 5ARBlhHDsRGr7mhrAAAA with id 96047389
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 0 of 30 SUCCESS (0 secs / 0 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 1 of 30 SUCCESS (0 secs / 0.03 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 2 of 30 SUCCESS (0 secs / 0.041 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 3 of 30 SUCCESS (0 secs / 0.045 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 4 of 30 SUCCESS (0 secs / 0.049 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 5 of 30 SUCCESS (0 secs / 0.053 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 6 of 30 SUCCESS (0 secs / 0.056 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 7 of 30 SUCCESS (0 secs / 0.063 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 8 of 30 SUCCESS (0 secs / 0.074 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 9 of 30 SUCCESS (0 secs / 0.084 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 10 of 30 SUCCESS (0 secs / 0.089 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 11 of 30 SUCCESS (0 secs / 0.101 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 12 of 30 SUCCESS (0 secs / 0.113 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 13 of 30 SUCCESS (0 secs / 0.15 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 14 of 30 SUCCESS (0 secs / 0.155 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 15 of 30 SUCCESS (0 secs / 0.189 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 16 of 30 SUCCESS (0 secs / 0.196 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 17 of 30 SUCCESS (0 secs / 0.209 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 18 of 30 SUCCESS (0 secs / 0.225 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 19 of 30 SUCCESS (0 secs / 0.231 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 20 of 30 SUCCESS (0 secs / 0.254 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 21 of 30 SUCCESS (0 secs / 0.254 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 22 of 30 SUCCESS (0 secs / 0.254 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 23 of 30 SUCCESS (0 secs / 0.254 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 24 of 30 SUCCESS (0 secs / 0.255 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 25 of 30 SUCCESS (0 secs / 0.255 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 26 of 30 SUCCESS (0 secs / 0.255 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 27 of 30 SUCCESS (0 secs / 0.256 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 28 of 30 SUCCESS (0 secs / 0.256 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 29 of 30 SUCCESS (0 secs / 0.256 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 30 of 30 SUCCESS (0 secs / 0.256 secs)
+Chrome Headless 153.0.8010.0 (Linux 0.0.0): Executed 30 of 30 SUCCESS (0.273 secs / 0.256 secs)
+TOTAL: 30 SUCCESS
+
+=============================== Coverage summary ===============================
+Statements   : 84.53% ( 541/640 )
+Branches     : 78.34% ( 340/434 )
+Functions    : 87.77% ( 201/229 )
+Lines        : 86.39% ( 489/566 )
+================================================================================

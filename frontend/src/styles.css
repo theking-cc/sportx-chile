@@ -1,0 +1,33 @@
+body {
+  background: #f8f9fa;
+}
+.hero {
+  background: #151515;
+  color: white;
+}
+.product-image {
+  height: 230px;
+  object-fit: cover;
+}
+.nav-link.active {
+  color: #dc3545 !important;
+  font-weight: 600;
+}
+
+.form-card {
+  max-width: 760px;
+}
+main {
+  overflow-wrap: anywhere;
+}
+.table td {
+  vertical-align: middle;
+}
+@media (max-width: 991px) {
+  .navbar-collapse {
+    padding-top: 1rem;
+  }
+  .navbar-nav {
+    margin-bottom: 1rem;
+  }
+}
