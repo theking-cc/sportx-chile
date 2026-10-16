@@ -6,8 +6,6 @@ import java.util.Base64;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.nimbusds.jose.jwk.source.ImmutableSecret;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,10 +21,16 @@ import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
+import com.nimbusds.jose.jwk.source.ImmutableSecret;
+
 import sportx_api.security.UsuarioJwtValidator;
 
 @Configuration
 public class JwtConfig {
+
+    // ==========================================
+    // CLAVE SECRETA JWT
+    // ==========================================
 
     @Bean
     public SecretKey jwtSecretKey(
@@ -43,6 +47,10 @@ public class JwtConfig {
         return new SecretKeySpec(bytes, "HmacSHA256");
     }
 
+    // ==========================================
+    // GENERADOR DE TOKENS JWT
+    // ==========================================
+
     @Bean
     public JwtEncoder jwtEncoder(SecretKey jwtSecretKey) {
 
@@ -50,6 +58,10 @@ public class JwtConfig {
             new ImmutableSecret<>(jwtSecretKey)
         );
     }
+
+    // ==========================================
+    // DECODIFICADOR Y VALIDACIÓN JWT
+    // ==========================================
 
     @Bean
     public JwtDecoder jwtDecoder(
@@ -61,11 +73,12 @@ public class JwtConfig {
             .macAlgorithm(MacAlgorithm.HS256)
             .build();
 
+        // VALIDAR EMISOR SIN CONVERTIRLO A URI
         OAuth2TokenValidator<Jwt> emisorValidator = jwt -> {
 
-            if (jwt.getIssuer() == null
-                    || !"sportx-chile".equals(
-                        jwt.getIssuer().toString())) {
+            String issuer = jwt.getClaimAsString("iss");
+
+            if (!"sportx-chile".equals(issuer)) {
 
                 return OAuth2TokenValidatorResult.failure(
                     new OAuth2Error(
@@ -79,6 +92,7 @@ public class JwtConfig {
             return OAuth2TokenValidatorResult.success();
         };
 
+        // VALIDACIONES DE SEGURIDAD
         decoder.setJwtValidator(
             new DelegatingOAuth2TokenValidator<>(
                 JwtValidators.createDefault(),

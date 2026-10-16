@@ -36,147 +36,297 @@ public class CarritoService {
         this.productoRepository = productoRepository;
     }
 
+    // ==========================================
+    // OBTENER CARRITO DEL CLIENTE
+    // ==========================================
+
     @Transactional
     public CarritoResponse obtener(Long usuarioId) {
+
+        System.out.println("=== INICIO CARRITO ===");
+        System.out.println("Usuario ID: " + usuarioId);
+
         Carrito carrito = obtenerOCrear(usuarioId);
-        return convertir(carrito);
+
+        System.out.println(
+            "Carrito encontrado: " + carrito.getId()
+        );
+
+        CarritoResponse respuesta = convertir(carrito);
+
+        System.out.println("Conversión completada");
+        System.out.println("=== FIN CARRITO ===");
+
+        return respuesta;
     }
+
+    // ==========================================
+    // AGREGAR PRODUCTOS AL CARRITO
+    // ==========================================
 
     @Transactional
     public CarritoResponse agregar(
             Long usuarioId,
             AgregarCarritoRequest datos) {
 
-        if (datos.idProducto() == null
+        if (datos == null
+                || datos.idProducto() == null
                 || datos.cantidad() == null
                 || datos.cantidad() < 1) {
+
             throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Producto o cantidad inválida");
+                HttpStatus.BAD_REQUEST,
+                "Producto o cantidad inválida"
+            );
         }
 
         Carrito carrito = obtenerOCrear(usuarioId);
-        Producto producto = buscarProducto(datos.idProducto());
+
+        Producto producto = buscarProducto(
+            datos.idProducto()
+        );
 
         DetalleCarrito detalle = detalleRepository
             .findByIdCarritoAndIdProducto(
-                carrito.getId(), producto.getId())
+                carrito.getId(),
+                producto.getId()
+            )
             .orElse(null);
 
-        int cantidadActual = detalle == null ? 0 : detalle.getCantidad();
-        long nuevaCantidad = (long) cantidadActual + datos.cantidad();
+        int cantidadActual = detalle == null
+            ? 0
+            : detalle.getCantidad();
+
+        long nuevaCantidad =
+            (long) cantidadActual + datos.cantidad();
 
         validarStock(producto, nuevaCantidad);
 
         if (detalle == null) {
+
             detalle = new DetalleCarrito();
+
             detalle.setIdCarrito(carrito.getId());
             detalle.setIdProducto(producto.getId());
         }
 
         detalle.setCantidad((int) nuevaCantidad);
-        detalleRepository.save(detalle);
+
+        detalleRepository.saveAndFlush(detalle);
 
         return convertir(carrito);
     }
 
+    // ==========================================
+    // ACTUALIZAR CANTIDAD
+    // ==========================================
+
     @Transactional
     public CarritoResponse actualizar(
-            Long usuarioId, Long detalleId, Integer cantidad) {
+            Long usuarioId,
+            Long detalleId,
+            Integer cantidad) {
 
         if (cantidad == null || cantidad < 1) {
+
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
-                "La cantidad debe ser mayor que cero");
+                "La cantidad debe ser mayor que cero"
+            );
         }
 
         Carrito carrito = obtenerExistente(usuarioId);
 
         DetalleCarrito detalle = detalleRepository
-            .findByIdAndIdCarrito(detalleId, carrito.getId())
-            .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Producto no encontrado en el carrito"));
+            .findByIdAndIdCarrito(
+                detalleId,
+                carrito.getId()
+            )
+            .orElseThrow(() ->
+                new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Producto no encontrado en el carrito"
+                )
+            );
 
-        Producto producto = buscarProducto(detalle.getIdProducto());
+        Producto producto = buscarProducto(
+            detalle.getIdProducto()
+        );
+
         validarStock(producto, cantidad);
 
         detalle.setCantidad(cantidad);
-        detalleRepository.save(detalle);
+
+        detalleRepository.saveAndFlush(detalle);
 
         return convertir(carrito);
     }
 
+    // ==========================================
+    // ELIMINAR PRODUCTO DEL CARRITO
+    // ==========================================
+
     @Transactional
-    public CarritoResponse eliminar(Long usuarioId, Long detalleId) {
+    public CarritoResponse eliminar(
+            Long usuarioId,
+            Long detalleId) {
 
         Carrito carrito = obtenerExistente(usuarioId);
 
         DetalleCarrito detalle = detalleRepository
-            .findByIdAndIdCarrito(detalleId, carrito.getId())
-            .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Producto no encontrado en el carrito"));
+            .findByIdAndIdCarrito(
+                detalleId,
+                carrito.getId()
+            )
+            .orElseThrow(() ->
+                new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Producto no encontrado en el carrito"
+                )
+            );
 
         detalleRepository.delete(detalle);
+
         detalleRepository.flush();
 
         return convertir(carrito);
     }
 
+    // ==========================================
+    // OBTENER O CREAR CARRITO
+    // ==========================================
+
     private Carrito obtenerOCrear(Long usuarioId) {
 
-        return carritoRepository.findByIdUsuario(usuarioId)
+        if (usuarioId == null) {
+            throw new ResponseStatusException(
+                HttpStatus.UNAUTHORIZED,
+                "Usuario no identificado"
+            );
+        }
+
+        System.out.println(
+            "Buscando carrito del usuario: " + usuarioId
+        );
+
+        return carritoRepository
+            .findByIdUsuario(usuarioId)
             .orElseGet(() -> {
+
+                System.out.println(
+                    "Creando carrito para usuario: " + usuarioId
+                );
+
                 Carrito carrito = new Carrito();
+
                 carrito.setIdUsuario(usuarioId);
-                return carritoRepository.saveAndFlush(carrito);
+
+                return carritoRepository.saveAndFlush(
+                    carrito
+                );
             });
     }
 
+    // ==========================================
+    // OBTENER CARRITO EXISTENTE
+    // ==========================================
+
     private Carrito obtenerExistente(Long usuarioId) {
 
-        return carritoRepository.findByIdUsuario(usuarioId)
-            .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "El carrito no existe"));
+        return carritoRepository
+            .findByIdUsuario(usuarioId)
+            .orElseThrow(() ->
+                new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "El carrito no existe"
+                )
+            );
     }
+
+    // ==========================================
+    // BUSCAR PRODUCTO ACTIVO
+    // ==========================================
 
     private Producto buscarProducto(Long productoId) {
 
-        Producto producto = productoRepository.findById(productoId)
-            .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Producto no encontrado"));
+        Producto producto = productoRepository
+            .findById(productoId)
+            .orElseThrow(() ->
+                new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Producto no encontrado"
+                )
+            );
 
         if (!Boolean.TRUE.equals(producto.getActivo())
                 || producto.getCategoria() == null
                 || !Boolean.TRUE.equals(
-                    producto.getCategoria().getActivo())) {
+                    producto.getCategoria().getActivo()
+                )) {
+
             throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Producto no disponible");
+                HttpStatus.BAD_REQUEST,
+                "Producto no disponible"
+            );
         }
 
         return producto;
     }
 
-    private void validarStock(Producto producto, long cantidad) {
+    // ==========================================
+    // VALIDAR STOCK
+    // ==========================================
+
+    private void validarStock(
+            Producto producto,
+            long cantidad) {
 
         if (producto.getStock() == null
                 || cantidad > producto.getStock()
                 || cantidad > Integer.MAX_VALUE) {
+
             throw new ResponseStatusException(
-                HttpStatus.CONFLICT, "Stock insuficiente");
+                HttpStatus.CONFLICT,
+                "Stock insuficiente"
+            );
         }
     }
 
+    // ==========================================
+    // CONVERTIR CARRITO A DTO
+    // ==========================================
+
     private CarritoResponse convertir(Carrito carrito) {
 
+        System.out.println(
+            "Consultando detalles del carrito: "
+                + carrito.getId()
+        );
+
         List<DetalleCarrito> detalles =
-            detalleRepository.findByIdCarritoOrderByIdAsc(carrito.getId());
+            detalleRepository
+                .findByIdCarritoOrderByIdAsc(
+                    carrito.getId()
+                );
+
+        System.out.println(
+            "Cantidad de registros encontrados: "
+                + detalles.size()
+        );
 
         List<CarritoItemResponse> items = detalles.stream()
             .map(detalle -> {
 
-                Producto producto = buscarProducto(detalle.getIdProducto());
+                Producto producto = buscarProducto(
+                    detalle.getIdProducto()
+                );
 
-                BigDecimal subtotal = producto.getPrecio()
-                    .multiply(BigDecimal.valueOf(detalle.getCantidad()));
+                BigDecimal subtotal =
+                    producto.getPrecio().multiply(
+                        BigDecimal.valueOf(
+                            detalle.getCantidad()
+                        )
+                    );
 
                 return new CarritoItemResponse(
                     detalle.getId(),
@@ -192,7 +342,14 @@ public class CarritoService {
 
         BigDecimal total = items.stream()
             .map(CarritoItemResponse::subtotal)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .reduce(
+                BigDecimal.ZERO,
+                BigDecimal::add
+            );
+
+        System.out.println(
+            "Total calculado: " + total
+        );
 
         return new CarritoResponse(
             carrito.getId(),

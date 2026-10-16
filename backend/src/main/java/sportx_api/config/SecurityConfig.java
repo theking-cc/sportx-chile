@@ -3,8 +3,6 @@ package sportx_api.config;
 
 import java.util.List;
 
-import jakarta.servlet.DispatcherType;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +15,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import jakarta.servlet.DispatcherType;
 
 @Configuration
 public class SecurityConfig {
@@ -44,29 +44,34 @@ public class SecurityConfig {
                 .dispatcherTypeMatchers(DispatcherType.ERROR)
                     .permitAll()
 
-                // REGISTRO Y LOGIN PÚBLICOS
+                // LOGIN Y REGISTRO PÚBLICOS
                 .requestMatchers(
                     "/api/auth/registro",
                     "/api/auth/login"
                 ).permitAll()
 
-                // CATÁLOGO PÚBLICO
+                // CONSULTAR PRODUCTOS Y CATEGORÍAS
                 .requestMatchers(
                     HttpMethod.GET,
                     "/api/productos",
                     "/api/productos/*",
                     "/api/categorias",
-                    "/api/categorias/*",
-                    "/api/carrito", 
-                    "/api/carrito/**"
+                    "/api/categorias/*"
                 ).permitAll()
 
-                // CREAR Y MODIFICAR PRODUCTOS
+                // CARRITO: SOLO CLIENTES
+                .requestMatchers(
+                    "/api/carrito",
+                    "/api/carrito/**"
+                ).hasRole("CLIENTE")
+
+                // CREAR PRODUCTOS
                 .requestMatchers(
                     HttpMethod.POST,
                     "/api/productos"
-                ).hasAnyRole("ADMIN", "VENDEDOR", "CLIENTE")
+                ).hasAnyRole("ADMIN", "VENDEDOR")
 
+                // MODIFICAR PRODUCTOS
                 .requestMatchers(
                     HttpMethod.PUT,
                     "/api/productos/*"
