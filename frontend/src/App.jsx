@@ -16,6 +16,7 @@ import Contact from "./pages/Contact.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import GoogleRegister from "./pages/GoogleRegister.jsx";
+import PagoResultado from "./pages/PagoResultado.jsx";
 import Profile from "./pages/Profile.jsx";
 import Orders from "./pages/Orders.jsx";
 import OrderDetail from "./pages/OrderDetail.jsx";
@@ -33,6 +34,7 @@ export const VIEW_ROUTES = [
   ["/carrito", Cart],
   ["/finalizar-compra", Checkout, "user"],
   ["/compra-confirmada/:id", Confirmation, "user"],
+  ["/pago/resultado", PagoResultado, "user"],
   ["/nosotros", About],
   ["/blogs", Blog],
   ["/blogs/:id", Article],

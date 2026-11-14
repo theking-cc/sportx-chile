@@ -26,6 +26,7 @@ import sportx_api.model.Usuario;
 import sportx_api.repository.CarritoRepository;
 import sportx_api.repository.DetalleCarritoRepository;
 import sportx_api.repository.OrdenRepository;
+import sportx_api.repository.PagoRepository;
 import sportx_api.repository.ProductoRepository;
 import sportx_api.repository.UsuarioRepository;
 
@@ -51,6 +52,7 @@ public class OrdenService {
     private final ProductoRepository productoRepository;
     private final UsuarioRepository usuarioRepository;
     private final UbicacionService ubicacionService;
+    private final PagoRepository pagoRepository;
 
     public OrdenService(
             OrdenRepository ordenRepository,
@@ -58,7 +60,8 @@ public class OrdenService {
             DetalleCarritoRepository detalleCarritoRepository,
             ProductoRepository productoRepository,
             UsuarioRepository usuarioRepository,
-            UbicacionService ubicacionService) {
+            UbicacionService ubicacionService,
+            PagoRepository pagoRepository) {
 
         this.ordenRepository = ordenRepository;
         this.carritoRepository = carritoRepository;
@@ -66,6 +69,7 @@ public class OrdenService {
         this.productoRepository = productoRepository;
         this.usuarioRepository = usuarioRepository;
         this.ubicacionService = ubicacionService;
+        this.pagoRepository = pagoRepository;
     }
 
     // =========================================
@@ -73,6 +77,18 @@ public class OrdenService {
     // =========================================
     @Transactional
     public OrdenResponse crear(Long usuarioId, CrearOrdenRequest datos) {
+        Orden orden = reservar(usuarioId, datos);
+        vaciarCarrito(usuarioId);
+        return convertir(orden);
+    }
+
+    /**
+     * Crea la orden y descuenta (reserva) el stock, SIN vaciar el carrito.
+     * Lo usa el pago con Webpay: el carrito se vacía solo si el pago se aprueba,
+     * y si se rechaza o se anula la orden se cancela y el stock se repone.
+     */
+    @Transactional
+    public Orden reservar(Long usuarioId, CrearOrdenRequest datos) {
 
         Usuario usuario = usuarioRepository.findById(usuarioId)
             .orElseThrow(() -> new ResponseStatusException(
@@ -151,12 +167,39 @@ public class OrdenService {
         orden.setMontoTotal(subtotal.subtract(descuento));
         orden.setCodigoCupon(cupon);
 
-        Orden guardada = ordenRepository.save(orden);
+        return ordenRepository.save(orden);
+    }
 
-        // Vacía el carrito una vez registrada la orden.
-        detalleCarritoRepository.deleteAll(items);
+    @Transactional
+    public void vaciarCarrito(Long usuarioId) {
+        carritoRepository.findByIdUsuario(usuarioId).ifPresent(c ->
+            detalleCarritoRepository.deleteAll(
+                detalleCarritoRepository.findByIdCarritoOrderByIdAsc(c.getId())));
+    }
 
-        return convertir(guardada);
+    /** Cancela una orden Pendiente porque su pago no se completó; repone el stock. */
+    @Transactional
+    public void cancelarPorPagoFallido(Long ordenId) {
+        ordenRepository.findWithDetallesById(ordenId).ifPresent(orden -> {
+            if (!"Pendiente".equals(orden.getEstado())) {
+                return;
+            }
+            reponerStock(orden);
+            orden.setEstado("Cancelado");
+            ordenRepository.save(orden);
+        });
+    }
+
+    private void reponerStock(Orden orden) {
+        if (Boolean.TRUE.equals(orden.getStockRepuesto())) {
+            return;
+        }
+        for (DetalleOrden detalle : orden.getDetalles()) {
+            productoRepository.findByIdParaActualizar(detalle.getIdProducto())
+                .ifPresent(p -> p.setStock(p.getStock() + detalle.getCantidad()));
+        }
+        orden.setStockRepuesto(true);
+        orden.setFechaCancelacion(LocalDateTime.now());
     }
 
     // =========================================
@@ -194,16 +237,18 @@ public class OrdenService {
                 HttpStatus.BAD_REQUEST, "El cambio de estado no está permitido");
         }
 
-        if ("Cancelado".equals(nuevoEstado)
-                && !Boolean.TRUE.equals(orden.getStockRepuesto())) {
+        // Un pedido pagado con Webpay solo avanza si el pago fue aprobado.
+        if ("Preparando".equals(nuevoEstado)) {
+            pagoRepository.findFirstByIdOrdenOrderByIdDesc(ordenId).ifPresent(pago -> {
+                if (!"APROBADO".equals(pago.getEstado())) {
+                    throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "El pedido aún no tiene un pago aprobado");
+                }
+            });
+        }
 
-            for (DetalleOrden detalle : orden.getDetalles()) {
-                productoRepository.findByIdParaActualizar(detalle.getIdProducto())
-                    .ifPresent(p -> p.setStock(p.getStock() + detalle.getCantidad()));
-            }
-
-            orden.setStockRepuesto(true);
-            orden.setFechaCancelacion(LocalDateTime.now());
+        if ("Cancelado".equals(nuevoEstado)) {
+            reponerStock(orden);
         }
 
         orden.setEstado(nuevoEstado);
@@ -238,7 +283,7 @@ public class OrdenService {
         return descuento.min(subtotal);
     }
 
-    private OrdenResponse convertir(Orden o) {
+    public OrdenResponse convertir(Orden o) {
 
         List<OrdenItemResponse> productos = o.getDetalles().stream()
             .map(d -> new OrdenItemResponse(
@@ -265,7 +310,12 @@ public class OrdenService {
             o.getDireccionEntrega(),
             o.getRegionEntrega(),
             o.getComunaEntrega(),
-            productos
+            productos,
+            pagoRepository.findFirstByIdOrdenOrderByIdDesc(o.getId())
+                .map(p -> new OrdenResponse.PagoInfo(
+                    p.getEstado(), p.getCodigoAutorizacion(), p.getTipoPago(),
+                    p.getCuotas(), p.getUltimosDigitos()))
+                .orElse(null)
         );
     }
 }

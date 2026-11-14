@@ -87,6 +87,33 @@ Cupones válidos en el backend: `DUOC10` (10 %) y `SPORTX2026` ($5.000).
 Flujo: si el correo de Google ya tiene cuenta, se vincula y entra; si no, se pide RUT, comuna y dirección (`/registro-google`) y se crea como Cliente.
 El backend valida firma, emisor, audiencia, vigencia y correo verificado del token de Google.
 
+## Pagos con Transbank Webpay Plus
+
+1. **Migración (una vez, segura):** crea la tabla nueva `pagos`; no modifica datos existentes.
+   ```powershell
+   mysql -u root -p sportx_db_v2 < backend/src/main/resources/db/migraciones/V3__pagos_webpay.sql
+   ```
+2. **Variables del backend (`.env`):**
+   - `FRONTEND_URL=http://127.0.0.1:5173` (la URL donde abres el frontend; Transbank devuelve al comprador a `FRONTEND_URL/api/pagos/webpay/retorno`).
+   - `WEBPAY_AMBIENTE=integracion` (por defecto, pruebas de Transbank), `produccion` (requiere `WEBPAY_CODIGO_COMERCIO` y `WEBPAY_API_KEY` reales) o `simulado` (sin internet, para demostraciones).
+
+**Flujo:** el cliente pulsa *Pagar con Webpay* → el backend crea la orden y reserva el stock → Transbank → al volver:
+aprobado = carrito vaciado y pedido pagado; rechazado, anulado o expirado = pedido cancelado y stock repuesto (el carrito se conserva).
+Un pedido no pasa a *Preparando* sin pago aprobado. Pedidos de $0 se registran sin pasar por Webpay.
+
+**Tarjetas de prueba (ambiente de integración, publicadas por Transbank):**
+
+| Tarjeta | Número | CVV | Resultado |
+|---|---|---|---|
+| VISA crédito | 4051 8856 0044 6623 | 123 | Aprobada |
+| AMEX crédito | 3700 0000 0002 032 | 1234 | Aprobada |
+| Mastercard crédito | 5186 0595 5959 0568 | 123 | Rechazada |
+| Redcompra débito | 4051 8842 3993 7763 | — | Aprobada |
+| Redcompra débito | 5186 0085 4123 3829 | — | Rechazada |
+
+Fecha de expiración: cualquiera futura. En la autenticación: RUT `11.111.111-1`, clave `123`.
+Detalle oficial: https://www.transbankdevelopers.cl/documentacion/como_empezar#tarjetas-de-prueba
+
 ## Acceso de demostración
 
 En Iniciar sesión, abre **Acceso de demostración** y elige **Entrar como Administrador**, **Entrar como Vendedor** o **Entrar como Cliente**. Son cuentas ficticias para probar los roles y no publican contraseñas. El formulario de login también permite entrar con cuentas que registres tú mismo.

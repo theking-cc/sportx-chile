@@ -167,6 +167,15 @@ export function toOrder(o) {
     })),
     shipping: { direccion: o.direccion, region: o.region, comuna: o.comuna },
     coupon: o.codigoCupon || "",
+    pago: o.pago
+      ? {
+          estado: o.pago.estado,
+          autorizacion: o.pago.codigoAutorizacion || "",
+          tipo: o.pago.tipoPago || "",
+          cuotas: o.pago.cuotas || 0,
+          digitos: o.pago.ultimosDigitos || "",
+        }
+      : null,
     subtotal: Number(o.subtotal),
     descuento: Number(o.descuento),
     total: Number(o.total),
@@ -214,6 +223,37 @@ function userBody(form) {
     rol: form.rol,
   };
 }
+
+// Envía al comprador al formulario de Webpay: POST a la URL de Transbank con token_ws.
+export function redirigirAWebpay(url, token) {
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = url;
+  const input = document.createElement("input");
+  input.type = "hidden";
+  input.name = "token_ws";
+  input.value = token;
+  form.appendChild(input);
+  document.body.appendChild(form);
+  form.submit();
+}
+
+export const TIPOS_PAGO = {
+  VD: "Débito",
+  VN: "Crédito",
+  VC: "Crédito en cuotas",
+  SI: "3 cuotas sin interés",
+  S2: "2 cuotas sin interés",
+  NC: "Cuotas sin interés",
+  VP: "Prepago",
+};
+export const ESTADOS_PAGO = {
+  INICIADO: "Pendiente de pago",
+  APROBADO: "Pagado",
+  RECHAZADO: "Rechazado",
+  ANULADO: "Anulado",
+  ERROR: "Error en el pago",
+};
 
 // ---------- Endpoints ----------
 export const api = {
@@ -307,6 +347,17 @@ export const api = {
     request("/carrito/items/" + idDetalle, { method: "DELETE" }),
 
   // Pedidos
+  // Webpay Plus: crea la orden y devuelve { gratis, idOrden, url, token }.
+  iniciarPago({ direccion, idComuna, codigoCupon }) {
+    return request("/pagos/webpay/iniciar", {
+      method: "POST",
+      body: {
+        direccion: direccion.trim(),
+        idComuna: Number(idComuna),
+        codigoCupon: codigoCupon?.trim() || null,
+      },
+    });
+  },
   async crearOrden({ direccion, idComuna, codigoCupon }) {
     const r = await request("/ordenes", {
       method: "POST",

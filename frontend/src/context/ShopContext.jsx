@@ -6,7 +6,13 @@ import {
   useState,
 } from "react";
 import * as repo from "../services/repository.js";
-import { api, clearAuth, getAuth, toCart } from "../services/api.js";
+import {
+  api,
+  clearAuth,
+  getAuth,
+  redirigirAWebpay,
+  toCart,
+} from "../services/api.js";
 const ShopContext = createContext(null);
 
 // Estado de la tienda.
@@ -336,16 +342,21 @@ export function ShopProvider({ children }) {
     if (remoteUser && !serverCartMode)
       throw new Error("Solo las cuentas de cliente pueden realizar compras.");
     if (serverCartMode) {
-      // El backend crea la orden, descuenta stock y vacía el carrito.
-      const order = await api.crearOrden({
+      // Webpay Plus: el backend crea la orden (reserva stock) y abre la transacción.
+      const pago = await api.iniciarPago({
         direccion: shipping.direccion,
         idComuna: shipping.idComuna,
         codigoCupon: coupon,
       });
-      setServerCart([]);
-      setRemoteOrders((prev) => [order, ...prev]);
-      reloadProducts().catch(() => null);
-      return order;
+      if (pago.gratis) {
+        // Total $0: la orden queda registrada sin pasar por Webpay.
+        setServerCart([]);
+        await refreshRemote();
+        reloadProducts().catch(() => null);
+        return { id: String(pago.idOrden) };
+      }
+      redirigirAWebpay(pago.url, pago.token);
+      return { redirecting: true };
     }
     // Sesión local de demostración con catálogo del servidor.
     const current = repo.loadDatabase();
@@ -448,6 +459,7 @@ export function ShopProvider({ children }) {
         saveProduct,
         removeProduct,
         reloadProducts,
+        refreshRemote,
         purchase,
         updateOrderStatus,
         sendMessage,

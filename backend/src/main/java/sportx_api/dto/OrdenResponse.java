@@ -19,6 +19,15 @@ public record OrdenResponse(
     String direccion,
     String region,
     String comuna,
-    List<OrdenItemResponse> productos
+    List<OrdenItemResponse> productos,
+    PagoInfo pago
 ) {
+    /** Estado del pago Webpay asociado (null si la orden no pasó por Webpay). */
+    public record PagoInfo(
+        String estado,
+        String codigoAutorizacion,
+        String tipoPago,
+        Integer cuotas,
+        String ultimosDigitos) {
+    }
 }

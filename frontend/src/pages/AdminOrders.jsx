@@ -4,6 +4,7 @@ import { ORDER_STATES } from "../services/repository.js";
 import AdminNav from "../components/AdminNav.jsx";
 import OrderSummary from "../components/OrderSummary.jsx";
 import { money } from "../data/seed.js";
+import { ESTADOS_PAGO } from "../services/api.js";
 // Mismas transiciones que valida el backend.
 const NEXT_STATES = {
   Pendiente: ["Preparando", "Cancelado"],
@@ -44,6 +45,8 @@ export default function AdminOrders() {
             <p className="text-muted small">
               {new Date(o.createdAt).toLocaleString("es-CL")} · Total{" "}
               {money(o.total)}
+              {o.pago &&
+                ` · Pago: ${ESTADOS_PAGO[o.pago.estado] || o.pago.estado}`}
             </p>
             <label htmlFor={"status-" + o.id} className="form-label">
               Estado del pedido

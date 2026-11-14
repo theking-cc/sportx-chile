@@ -26,6 +26,7 @@ export default function Checkout() {
   const [coupon, setCoupon] = useState(location.state?.coupon || "");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const navigate = useNavigate();
   const totals = total(
     cart,
@@ -50,6 +51,11 @@ export default function Checkout() {
     setBusy(true);
     try {
       const order = await purchase(shipping, coupon);
+      // Con Webpay el navegador sale hacia Transbank; no se navega aquí.
+      if (order.redirecting) {
+        setRedirecting(true);
+        return;
+      }
       navigate("/compra-confirmada/" + order.id, { replace: true });
     } catch (err) {
       setError(err.message);
@@ -69,7 +75,7 @@ export default function Checkout() {
       <h1>Finalizar compra</h1>
       <p>
         {remote
-          ? "El pedido se registrará y el stock se descontará al confirmar. No se realiza ningún cobro."
+          ? "Pagarás en Webpay de Transbank con tarjeta de débito, crédito o prepago. Al volver verás el resultado de tu pago."
           : "Compra de demostración. No se realiza ningún cobro."}
       </p>
       {error && (
@@ -133,8 +139,19 @@ export default function Checkout() {
         />
         <p className="fw-bold fs-4">Total estimado: {money(totals.total)}</p>
         <button className="btn btn-danger" disabled={busy}>
-          Confirmar pedido
+          {redirecting
+            ? "Redirigiendo a Webpay…"
+            : remote
+              ? totals.total > 0
+                ? "Pagar con Webpay"
+                : "Confirmar pedido"
+              : "Confirmar pedido"}
         </button>
+        {remote && totals.total > 0 && (
+          <p className="small text-muted mt-2 mb-0">
+            Serás redirigido al sitio seguro de Transbank.
+          </p>
+        )}
       </form>
     </section>
   );

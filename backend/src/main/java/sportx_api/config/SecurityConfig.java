@@ -68,6 +68,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/mensajes")
                     .hasAnyRole("ADMIN", "VENDEDOR")
 
+                // PAGOS WEBPAY: iniciar solo clientes; retorno y simulador son públicos
+                .requestMatchers(HttpMethod.POST, "/api/pagos/webpay/iniciar").hasRole("CLIENTE")
+                .requestMatchers("/api/pagos/webpay/retorno", "/api/pagos/simulador").permitAll()
+
                 // PEDIDOS
                 .requestMatchers(HttpMethod.POST, "/api/ordenes").hasRole("CLIENTE")
                 .requestMatchers(HttpMethod.GET, "/api/ordenes/mias").hasRole("CLIENTE")

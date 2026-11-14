@@ -4,7 +4,7 @@ import { useShop } from "../context/ShopContext.jsx";
 import { total } from "../services/cart.js";
 import { COUPONS, money } from "../data/seed.js";
 export default function Cart() {
-  const { cart, change, remove, clear } = useShop();
+  const { cart, change, remove, clear, online } = useShop();
   const [code, setCode] = useState("");
   const [coupon, setCoupon] = useState(null);
   const [error, setError] = useState("");
@@ -98,7 +98,9 @@ export default function Cart() {
                 <p className="text-success">Cupón {coupon.codigo} aplicado</p>
               )}
               <p className="mt-3">Subtotal: {money(totals.subtotal)}</p>
-              <p>Descuento: {money(totals.descuento)}</p>
+              {totals.descuento > 0 && (
+                <p>Descuento: −{money(totals.descuento)}</p>
+              )}
               <p className="fs-4 fw-bold">Total: {money(totals.total)}</p>
               <Link
                 to="/finalizar-compra"
@@ -108,8 +110,9 @@ export default function Cart() {
                 Finalizar compra
               </Link>
               <p className="small text-muted">
-                La compra de demostración registra tu pedido y actualiza el
-                inventario.
+                {online === true
+                  ? "Pagas en Webpay de Transbank con débito, crédito o prepago."
+                  : "La compra de demostración registra tu pedido y actualiza el inventario."}
               </p>
             </div>
           </aside>
