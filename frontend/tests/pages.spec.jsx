@@ -68,7 +68,7 @@ describe("Vistas, navegación y formularios", () => {
     fireEvent.click(screen.getByRole("link", { name: "Admin", exact: true }));
     expect(screen.getByText("Mi consulta de prueba")).toBeTruthy();
   });
-  it("crea y edita un producto y permite eliminarlo desde la tabla", () => {
+  it("crea y edita un producto y permite eliminarlo desde la tabla", async () => {
     seed();
     mount("/admin/productos/nuevo");
     field("Código", "TEST-001");
@@ -78,13 +78,13 @@ describe("Vistas, navegación y formularios", () => {
     field("Stock crítico", "1");
     field("Categoría", "Fitness");
     fireEvent.click(screen.getByRole("button", { name: "Guardar producto" }));
-    expect(screen.getByText("Producto nuevo")).toBeTruthy();
+    expect(await screen.findByText("Producto nuevo")).toBeTruthy();
     const product = state().products.find((p) => p.codigo === "TEST-001");
     cleanup();
     mount("/admin/productos/" + product.id + "/editar");
     field("Nombre", "Producto editado");
     fireEvent.click(screen.getByRole("button", { name: "Guardar producto" }));
-    expect(screen.getByText("Producto editado")).toBeTruthy();
+    expect(await screen.findByText("Producto editado")).toBeTruthy();
     spyOn(window, "confirm").and.returnValue(true);
     const row = screen.getByText("Producto editado").closest("tr");
     fireEvent.click(row.querySelector("button"));
@@ -97,7 +97,7 @@ describe("Vistas, navegación y formularios", () => {
     expect(screen.getByText(/Código obligatorio/)).toBeTruthy();
     expect(state().products.length).toBe(3);
   });
-  it("crea y edita un usuario y permite eliminarlo desde administración", () => {
+  it("crea y edita un usuario y permite eliminarlo desde administración", async () => {
     seed();
     mount("/admin/usuarios/nuevo");
     field("RUN (sin puntos ni guion)", "123456785");
@@ -118,18 +118,20 @@ describe("Vistas, navegación y formularios", () => {
     expect(state().users.find((u) => u.id === user.id).rol).toBe("Vendedor");
     spyOn(window, "confirm").and.returnValue(true);
     fireEvent.click(
-      screen.getByText("nuevo@gmail.com").closest("tr").querySelector("button"),
+      (await screen.findByText("nuevo@gmail.com"))
+        .closest("tr")
+        .querySelector("button"),
     );
     expect(state().users.some((u) => u.id === user.id)).toBeFalse();
   });
-  it("actualiza el perfil manteniendo la contraseña si el campo está vacío", () => {
+  it("actualiza el perfil manteniendo la contraseña si el campo está vacío", async () => {
     const { db, user } = seed("Cliente");
     user.password = "fixture"; // Valor ficticio exclusivo de esta prueba.
     repo.saveDatabase(db);
     mount("/perfil");
     field("Nombre", "Actualizado");
     fireEvent.click(screen.getByRole("button", { name: "Guardar cambios" }));
-    expect(screen.getByText("Perfil actualizado.")).toBeTruthy();
+    expect(await screen.findByText("Perfil actualizado.")).toBeTruthy();
     expect(state().users.find((u) => u.id === "demo-client").password).toBe(
       "fixture",
     );
@@ -192,7 +194,7 @@ describe("Vistas, navegación y formularios", () => {
     fireEvent.click(screen.getByRole("button", { name: "Agregar al carrito" }));
     expect(state().cart[0].cantidad).toBe(1);
   });
-  it("permite registrarse con datos válidos y luego iniciar sesión", () => {
+  it("permite registrarse con datos válidos y luego iniciar sesión", async () => {
     mount("/registro");
     field("RUN (sin puntos ni guion)", "123456785");
     field("Correo electrónico", "registro@gmail.com");
@@ -205,11 +207,13 @@ describe("Vistas, navegación y formularios", () => {
     field("Dirección", "Prueba 123");
     fireEvent.click(screen.getByRole("button", { name: "Crear cuenta" }));
     expect(
-      screen.getByRole("heading", { name: "Iniciar sesión" }),
+      await screen.findByRole("heading", { name: "Iniciar sesión" }),
     ).toBeTruthy();
     field("Correo electrónico", "registro@gmail.com");
     field("Contraseña", "1234");
     fireEvent.click(screen.getByRole("button", { name: "Ingresar" }));
-    expect(screen.getByRole("heading", { name: "Mi perfil" })).toBeTruthy();
+    expect(
+      await screen.findByRole("heading", { name: "Mi perfil" }),
+    ).toBeTruthy();
   });
 });

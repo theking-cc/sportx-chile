@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Field from "../components/Field.jsx";
 import { useShop } from "../context/ShopContext.jsx";
-import { addMessage } from "../services/repository.js";
 export default function Contact() {
-  const { user, changeDatabase } = useShop();
+  const { user, sendMessage, online } = useShop();
+  const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
     nombre: user?.nombre || "",
     correo: user?.correo || "",
@@ -11,10 +11,24 @@ export default function Contact() {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
+    if (busy) return;
+    if (
+      !form.nombre.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.correo) ||
+      !form.mensaje.trim() ||
+      form.mensaje.length > 1000
+    ) {
+      setError(
+        "Completa nombre, correo válido y mensaje de hasta 1000 caracteres.",
+      );
+      setSuccess(false);
+      return;
+    }
+    setBusy(true);
     try {
-      changeDatabase((db) => addMessage(db, form));
+      await sendMessage(form);
       setSuccess(true);
       setError("");
       setForm((prev) => ({ ...prev, mensaje: "" }));
@@ -22,12 +36,16 @@ export default function Contact() {
       setError(err.message);
       setSuccess(false);
     }
+    setBusy(false);
   }
   return (
     <section className="card p-4 mx-auto form-card">
       <h1>Contacto</h1>
       <p>
-        Déjanos tu consulta. Se guardará en este navegador para la demostración.
+        Déjanos tu consulta.
+        {online === true
+          ? " Nuestro equipo la revisará pronto."
+          : " Se guardará en este navegador para la demostración."}
       </p>
       {error && (
         <p role="alert" className="alert alert-danger">
@@ -65,7 +83,9 @@ export default function Contact() {
           required
           maxLength="1000"
         />
-        <button className="btn btn-danger">Guardar consulta</button>
+        <button className="btn btn-danger" disabled={busy}>
+          Guardar consulta
+        </button>
       </form>
     </section>
   );

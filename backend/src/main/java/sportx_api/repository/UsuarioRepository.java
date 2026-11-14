@@ -1,6 +1,8 @@
 
 package sportx_api.repository;
 
+import java.util.List;
+
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -20,7 +22,19 @@ public interface UsuarioRepository
     @Query("SELECT u FROM Usuario u WHERE u.id = :id")
     Optional<Usuario> findByIdConRol(@Param("id") Long id);
 
+    @EntityGraph(attributePaths = "rol")
+    Optional<Usuario> findByGoogleSub(String googleSub);
+
     boolean existsByEmailIgnoreCase(String email);
 
     boolean existsByRut(String rut);
+
+    boolean existsByEmailIgnoreCaseAndIdNot(String email, Long id);
+
+    boolean existsByRutAndIdNot(String rut, Long id);
+
+    @EntityGraph(attributePaths = "rol")
+    List<Usuario> findByActivoTrueOrderByIdAsc();
+
+    long countByRol_NombreAndActivoTrue(String nombreRol);
 }

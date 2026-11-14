@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useShop } from "../context/ShopContext.jsx";
-import { deleteUser } from "../services/repository.js";
 import AdminNav from "../components/AdminNav.jsx";
 export default function AdminUsers() {
-  const { db, changeDatabase } = useShop();
+  const { users, deleteUserAdmin } = useShop();
   const [error, setError] = useState("");
-  function remove(user) {
+  async function remove(user) {
     if (!window.confirm("¿Eliminar a " + user.nombre + "?")) return;
     try {
-      changeDatabase((db, actor) => deleteUser(db, user.id, actor));
+      setError("");
+      await deleteUserAdmin(user.id);
     } catch (err) {
       setError(err.message);
     }
@@ -37,7 +37,7 @@ export default function AdminUsers() {
             </tr>
           </thead>
           <tbody>
-            {db.users.map((u) => (
+            {users.map((u) => (
               <tr key={u.id}>
                 <td>
                   {u.nombre} {u.apellidos}

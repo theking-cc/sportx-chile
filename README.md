@@ -42,6 +42,51 @@ npm run test:e2e
 
 El recorrido crea datos de prueba en un navegador aislado, comprueba los flujos de las 21 vistas y guarda dos capturas en `tests/browser-output/`. No cambia los datos de tu navegador habitual. Arranca su propio servidor Vite en el puerto 4175.
 
+## Conectar frontend con backend (MariaDB)
+
+1. Inicia MariaDB con la base `sportx_db_v2` (usuario y clave en `backend/src/main/resources/application.properties`).
+2. Define la clave JWT (Base64 de al menos 32 bytes) y levanta el backend en el puerto 8080:
+
+   ```powershell
+   cd backend
+   $env:SPORTX_JWT_SECRET = "<tu-clave-base64>"
+   .\mvnw.cmd spring-boot:run
+   ```
+
+3. En otra terminal levanta el frontend: `cd frontend`, `npm install`, `npm run dev` y abre http://localhost:5173.
+   Vite redirige `/api` a `http://localhost:8080` (ver `frontend/vite.config.js`). Para otra URL usa `VITE_API_URL`.
+
+Con el backend activo todo se lee y guarda en MariaDB: catálogo, categorías, login/registro (JWT), carrito,
+pedidos (descuentan y reponen stock), mensajes de contacto, administración de usuarios y perfil.
+Si el backend no responde, la tienda usa los datos locales de demostración y lo indica en pantalla.
+
+| Endpoint | Acceso |
+| --- | --- |
+| `POST /api/auth/login`, `POST /api/auth/registro` | público |
+| `GET /api/productos`, `/api/categorias`, `/api/comunas` | público |
+| `POST /api/mensajes` | público |
+| `/api/carrito/**`, `POST /api/ordenes`, `GET /api/ordenes/mias` | Cliente |
+| `GET /api/ordenes`, `PATCH /api/ordenes/{id}/estado`, `GET /api/mensajes` | Administrador, Vendedor |
+| `POST/PUT /api/productos` | Administrador, Vendedor |
+| `DELETE /api/productos/{id}`, `/api/categorias` (escritura), `/api/usuarios/**` | Administrador |
+| `GET/PUT /api/usuarios/me` | cualquier usuario con sesión |
+
+Cupones válidos en el backend: `DUOC10` (10 %) y `SPORTX2026` ($5.000).
+
+## Inicio de sesión con Google
+
+1. **Migración (una vez, segura):** agrega la columna opcional `google_sub` a `usuarios`; no modifica datos.
+   ```powershell
+   mysql -u root -p sportx_db_v2 < backend/src/main/resources/db/migraciones/V2__google_auth.sql
+   ```
+2. **Google Cloud Console** → APIs y servicios → Credenciales → *Crear ID de cliente OAuth* → tipo **Aplicación web**.
+   Orígenes de JavaScript autorizados: `http://localhost:5173` y `http://localhost`.
+3. **Backend:** agrega a tu `.env` (el que usa `launch.json`): `GOOGLE_CLIENT_ID=<tu-id>.apps.googleusercontent.com`
+4. **Frontend:** crea `frontend/.env.local` con `VITE_GOOGLE_CLIENT_ID=<el mismo id>` y reinicia `npm run dev`.
+
+Flujo: si el correo de Google ya tiene cuenta, se vincula y entra; si no, se pide RUT, comuna y dirección (`/registro-google`) y se crea como Cliente.
+El backend valida firma, emisor, audiencia, vigencia y correo verificado del token de Google.
+
 ## Acceso de demostración
 
 En Iniciar sesión, abre **Acceso de demostración** y elige **Entrar como Administrador**, **Entrar como Vendedor** o **Entrar como Cliente**. Son cuentas ficticias para probar los roles y no publican contraseñas. El formulario de login también permite entrar con cuentas que registres tú mismo.

@@ -15,6 +15,7 @@ import Article from "./pages/Article.jsx";
 import Contact from "./pages/Contact.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import GoogleRegister from "./pages/GoogleRegister.jsx";
 import Profile from "./pages/Profile.jsx";
 import Orders from "./pages/Orders.jsx";
 import OrderDetail from "./pages/OrderDetail.jsx";
@@ -38,6 +39,7 @@ export const VIEW_ROUTES = [
   ["/contacto", Contact],
   ["/login", Login],
   ["/registro", Register],
+  ["/registro-google", GoogleRegister],
   ["/perfil", Profile, "user"],
   ["/pedidos", Orders, "user"],
   ["/pedidos/:id", OrderDetail, "user"],
@@ -60,15 +62,28 @@ function Page({ Component, access }) {
   return access ? <ProtectedRoute roles={roles}>{page}</ProtectedRoute> : page;
 }
 export default function App() {
-  const { message, dismiss } = useShop();
+  const { message, dismiss, online } = useShop();
   const location = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+  // Los avisos se cierran solos tras unos segundos para no seguir al usuario.
+  useEffect(() => {
+    if (!message) return;
+    const t = setTimeout(dismiss, 5000);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [message]);
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navbar />
       <main id="main-content" className="container py-4 py-md-5 flex-grow-1">
+        {online === false && (
+          <p className="small text-muted border rounded p-2">
+            Sin conexión con el servidor: se muestran datos locales de
+            demostración.
+          </p>
+        )}
         {message && (
           <div
             role="status"

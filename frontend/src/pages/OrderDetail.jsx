@@ -3,8 +3,8 @@ import { useShop } from "../context/ShopContext.jsx";
 import OrderSummary from "../components/OrderSummary.jsx";
 export default function OrderDetail() {
   const { id } = useParams();
-  const { db, user } = useShop();
-  const order = db.orders.find((o) => o.id === id && o.userId === user.id);
+  const { orders, user } = useShop();
+  const order = orders.find((o) => o.id === id && o.userId === user.id);
   if (!order)
     return (
       <>

@@ -1,23 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useShop } from "../context/ShopContext.jsx";
-import { saveUser } from "../services/repository.js";
 import { validateUser } from "../services/validation.js";
 import UserFields from "../components/UserFields.jsx";
 export default function Profile() {
-  const { user, changeDatabase } = useShop();
+  const { user, saveProfile, remote, comunas } = useShop();
   const [form, setForm] = useState({ ...user, password: "" });
+  const [busy, setBusy] = useState(false);
+  // El perfil del servidor llega después del login: actualiza el formulario.
+  useEffect(() => {
+    if (user.remote) setForm({ ...user, password: "" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.remote, user.idComuna, user.direccion, user.run]);
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [failed, setFailed] = useState(false);
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
-    const next = validateUser(form, { passwordRequired: false });
+    if (busy) return;
+    const next = validateUser(form, {
+      passwordRequired: false,
+      remote,
+      editing: true,
+    });
     setErrors(next);
     if (Object.keys(next).length) return;
+    setBusy(true);
     try {
-      changeDatabase((db, actor) =>
-        saveUser(db, form, actor, { profile: true }),
-      );
+      await saveProfile(form);
       setMessage("Perfil actualizado.");
       setFailed(false);
       setForm((prev) => ({ ...prev, password: "" }));
@@ -25,6 +34,7 @@ export default function Profile() {
       setMessage(err.message);
       setFailed(true);
     }
+    setBusy(false);
   }
   return (
     <section className="card p-4 mx-auto form-card">
@@ -43,9 +53,12 @@ export default function Profile() {
           editing
           value={form}
           errors={errors}
+          comunas={remote ? comunas : null}
           onChange={(k, v) => setForm((prev) => ({ ...prev, [k]: v }))}
         />
-        <button className="btn btn-danger">Guardar cambios</button>
+        <button className="btn btn-danger" disabled={busy}>
+          Guardar cambios
+        </button>
       </form>
     </section>
   );

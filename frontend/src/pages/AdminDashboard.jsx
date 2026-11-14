@@ -3,8 +3,8 @@ import AdminNav from "../components/AdminNav.jsx";
 import { money } from "../data/seed.js";
 import { exportDatabase } from "../services/repository.js";
 export default function AdminDashboard() {
-  const { db, user } = useShop();
-  const critical = db.products.filter((p) => p.stock <= p.stockCritico);
+  const { db, user, products, orders, messages, remote } = useShop();
+  const critical = products.filter((p) => p.stock <= p.stockCritico);
   function download() {
     const url = URL.createObjectURL(
       new Blob([exportDatabase(db)], { type: "application/json" }),
@@ -24,13 +24,13 @@ export default function AdminDashboard() {
       </p>
       <div className="row g-3 mb-4">
         {[
-          ["Productos", db.products.length],
+          ["Productos", products.length],
           ["Stock crítico", critical.length],
-          ["Pedidos", db.orders.length],
+          ["Pedidos", orders.length],
           [
             "Ventas vigentes",
             money(
-              db.orders
+              orders
                 .filter((o) => o.status !== "Cancelado")
                 .reduce((s, o) => s + o.total, 0),
             ),
@@ -51,18 +51,22 @@ export default function AdminDashboard() {
       )}
       {user.rol === "Administrador" && (
         <>
-          <button className="btn btn-outline-dark mb-4" onClick={download}>
-            Exportar respaldo de datos
-          </button>
-          <p className="small text-muted">
-            El respaldo contiene datos personales y contraseñas de cuentas
-            registradas. Guárdalo solo en tu computador.
-          </p>
+          {!remote && (
+            <>
+              <button className="btn btn-outline-dark mb-4" onClick={download}>
+                Exportar respaldo de datos
+              </button>
+              <p className="small text-muted">
+                El respaldo contiene datos personales y contraseñas de cuentas
+                registradas. Guárdalo solo en tu computador.
+              </p>
+            </>
+          )}
           <h2 className="h4">Consultas recibidas</h2>
-          {!db.messages.length ? (
+          {!messages.length ? (
             <p>No hay consultas.</p>
           ) : (
-            db.messages.map((m) => (
+            messages.map((m) => (
               <article key={m.id} className="card p-3 mb-2">
                 <strong>
                   {m.nombre} · {m.correo}
