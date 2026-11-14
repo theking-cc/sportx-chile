@@ -125,8 +125,14 @@ export default function App() {
         </Routes>
       </main>
       <footer className="bg-dark text-white py-4 text-center">
-        Sport<span className="text-danger">X</span> Chile · Equipamiento
-        deportivo
+        <img
+          src="brand/sportx-logo-blanco.svg"
+          alt="SportX Chile"
+          className="footer-logo mb-2"
+          width="120"
+          height="20"
+        />
+        <p className="mb-1">Equipamiento deportivo</p>
         <p className="small mb-0">
           Proyecto académico · Compras de demostración
         </p>

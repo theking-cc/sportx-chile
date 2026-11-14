@@ -16,8 +16,17 @@ export default function Navbar() {
   return (
     <header className="sticky-top bg-white shadow-sm">
       <nav className="navbar navbar-expand-lg container py-3">
-        <Link to="/" className="navbar-brand fw-bold fs-3">
-          Sport<span className="text-danger">X</span>
+        <Link
+          to="/"
+          className="navbar-brand brand-logo"
+          aria-label="SportX Chile, inicio"
+        >
+          <img
+            src="brand/sportx-logo.svg"
+            alt="SportX Chile"
+            width="150"
+            height="25"
+          />
         </Link>
         <button
           className="navbar-toggler"

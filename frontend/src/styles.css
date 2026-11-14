@@ -62,3 +62,25 @@ main {
   display: flex;
   justify-content: center;
 }
+
+/* Marca */
+.brand-logo img {
+  display: block;
+  height: 26px;
+  width: auto;
+}
+.footer-logo {
+  display: inline-block;
+  height: 20px;
+  width: auto;
+}
+@media (max-width: 575.98px) {
+  .brand-logo img {
+    height: 22px;
+  }
+}
+/* La .navbar de Bootstrap anula el padding del .container: se restituye para
+   que el logo quede alineado con el contenido y no toque el borde en móvil. */
+.navbar.container {
+  padding-inline: calc(var(--bs-gutter-x, 1.5rem) * 0.5);
+}

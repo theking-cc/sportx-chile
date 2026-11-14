@@ -77,7 +77,7 @@ export const PRODUCTS = [
   },
 ];
 export const fallbackImage =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400'%3E%3Crect width='600' height='400' fill='%23eeeeee'/%3E%3Ctext x='300' y='200' text-anchor='middle' font-size='32' fill='%23666666'%3ESportX%3C/text%3E%3C/svg%3E";
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Crect width='600' height='400' fill='%23EEF1F5'/%3E%3Cg transform='translate(195 95) scale(0.41)'%3E%3Cg transform='translate(0 112)'%3E%3Cpath fill='%23C9D0DC' d='M45 0 L127 0 L467 288 L385 288 Z'/%3E%3Cpath fill='%23E3A3AA' d='M385 0 L467 0 L127 288 L45 288 Z'/%3E%3Cpath fill='%23C9D0DC' d='M148 288 L248 220 L277 254 L289 239 L364 288 Z'/%3E%3Cpath fill='%23EEF1F5' d='M248 220 L260 235 L246 230 L239 240 L232 232 L218 241 Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E";
 export const money = (amount) =>
   amount === 0
     ? "FREE"
