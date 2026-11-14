@@ -138,6 +138,83 @@ export function toCart(c, products = []) {
   }));
 }
 
+// RUN del formulario (123456785) <-> RUT de la base de datos (12345678-5).
+export function formatRut(run) {
+  const clean = String(run || "")
+    .replace(/[^0-9kK]/g, "")
+    .toUpperCase();
+  return clean.length > 1 ? clean.slice(0, -1) + "-" + clean.slice(-1) : clean;
+}
+export function rutToRun(rut) {
+  return String(rut || "")
+    .replace(/[^0-9kK]/g, "")
+    .toUpperCase();
+}
+export function toOrder(o) {
+  return {
+    id: String(o.id),
+    number: o.numero,
+    userId: String(o.idUsuario),
+    cliente: o.destinatario,
+    correo: o.email,
+    createdAt: o.fecha,
+    status: o.estado,
+    items: (o.productos || []).map((i) => ({
+      id: String(i.idProducto),
+      nombre: i.nombre,
+      precio: Number(i.precioUnitario),
+      cantidad: i.cantidad,
+    })),
+    shipping: { direccion: o.direccion, region: o.region, comuna: o.comuna },
+    coupon: o.codigoCupon || "",
+    subtotal: Number(o.subtotal),
+    descuento: Number(o.descuento),
+    total: Number(o.total),
+  };
+}
+function toMessage(m) {
+  return {
+    id: String(m.id),
+    nombre: m.nombre,
+    correo: m.email,
+    asunto: m.asunto,
+    mensaje: m.mensaje,
+    estado: m.estado,
+    createdAt: m.fecha,
+  };
+}
+export function toUserRecord(u) {
+  return {
+    id: String(u.id),
+    run: rutToRun(u.rut),
+    nombre: u.nombre,
+    apellidos: u.apellidos,
+    correo: u.email,
+    rol: u.rol,
+    idComuna: u.idComuna ? String(u.idComuna) : "",
+    comuna: u.comuna || "",
+    region: u.region || "",
+    direccion: u.direccion || "",
+    fechaNacimiento: u.fechaNacimiento || "",
+    telefono: "",
+    password: "",
+    remote: true,
+  };
+}
+function userBody(form) {
+  return {
+    rut: formatRut(form.run),
+    nombre: form.nombre.trim(),
+    apellidos: form.apellidos.trim(),
+    email: form.correo.trim().toLowerCase(),
+    password: form.password || null,
+    idComuna: Number(form.idComuna),
+    direccion: form.direccion.trim(),
+    fechaNacimiento: form.fechaNacimiento || null,
+    rol: form.rol,
+  };
+}
+
 // ---------- Endpoints ----------
 export const api = {
   async login(email, password) {
@@ -155,7 +232,7 @@ export const api = {
       method: "POST",
       auth: false,
       body: {
-        rut: form.run.trim().toUpperCase(),
+        rut: formatRut(form.run),
         nombre: form.nombre.trim(),
         apellidos: form.apellidos.trim(),
         email: form.correo.trim().toLowerCase(),
@@ -192,4 +269,67 @@ export const api = {
     }),
   quitarDelCarrito: (idDetalle) =>
     request("/carrito/items/" + idDetalle, { method: "DELETE" }),
+
+  // Pedidos
+  async crearOrden({ direccion, idComuna, codigoCupon }) {
+    const r = await request("/ordenes", {
+      method: "POST",
+      body: {
+        direccion: direccion.trim(),
+        idComuna: Number(idComuna),
+        codigoCupon: codigoCupon?.trim() || null,
+      },
+    });
+    return toOrder(r);
+  },
+  async misOrdenes() {
+    return (await request("/ordenes/mias")).map(toOrder);
+  },
+  async ordenes() {
+    return (await request("/ordenes")).map(toOrder);
+  },
+  async cambiarEstadoOrden(id, estado) {
+    return toOrder(
+      await request("/ordenes/" + id + "/estado", {
+        method: "PATCH",
+        body: { estado },
+      }),
+    );
+  },
+
+  // Mensajes de contacto
+  enviarMensaje: (form) =>
+    request("/mensajes", {
+      method: "POST",
+      body: {
+        nombre: form.nombre.trim(),
+        email: form.correo.trim(),
+        mensaje: form.mensaje.trim(),
+      },
+    }),
+  async mensajes() {
+    return (await request("/mensajes")).map(toMessage);
+  },
+
+  // Usuarios (administrador) y perfil propio
+  async usuarios() {
+    return (await request("/usuarios")).map(toUserRecord);
+  },
+  async guardarUsuario(form) {
+    const body = userBody(form);
+    const r = form.id
+      ? await request("/usuarios/" + form.id, { method: "PUT", body })
+      : await request("/usuarios", { method: "POST", body });
+    return toUserRecord(r);
+  },
+  eliminarUsuario: (id) => request("/usuarios/" + id, { method: "DELETE" }),
+  async perfil() {
+    return toUserRecord(await request("/usuarios/me"));
+  },
+  async actualizarPerfil(form) {
+    const { rut, rol, ...body } = userBody(form);
+    void rut;
+    void rol;
+    return toUserRecord(await request("/usuarios/me", { method: "PUT", body }));
+  },
 };

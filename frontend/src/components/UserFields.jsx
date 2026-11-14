@@ -123,11 +123,7 @@ export default function UserFields({
           error={errors.comuna}
         >
           <option value="">Selecciona una comuna</option>
-          {comunas.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.nombre}
-            </option>
-          ))}
+          <ComunaOptions comunas={comunas} />
         </Field>
       ) : (
         <div className="row">
@@ -179,4 +175,20 @@ export default function UserFields({
       )}
     </>
   );
+}
+
+// Opciones de comuna agrupadas por región (datos del backend).
+export function ComunaOptions({ comunas }) {
+  const regiones = [...new Set(comunas.map((c) => c.region || "Otras"))];
+  return regiones.map((region) => (
+    <optgroup key={region} label={region}>
+      {comunas
+        .filter((c) => (c.region || "Otras") === region)
+        .map((c) => (
+          <option key={c.id} value={c.id}>
+            {c.nombre}
+          </option>
+        ))}
+    </optgroup>
+  ));
 }

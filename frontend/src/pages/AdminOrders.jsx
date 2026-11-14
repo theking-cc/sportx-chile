@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useShop } from "../context/ShopContext.jsx";
-import { updateOrder, ORDER_STATES } from "../services/repository.js";
+import { ORDER_STATES } from "../services/repository.js";
 import AdminNav from "../components/AdminNav.jsx";
 import OrderSummary from "../components/OrderSummary.jsx";
 export default function AdminOrders() {
-  const { db, changeDatabase } = useShop();
+  const { orders, updateOrderStatus } = useShop();
   const [error, setError] = useState("");
-  function change(id, status) {
+  async function change(id, status) {
     try {
-      changeDatabase((db, actor) => updateOrder(db, id, status, actor));
       setError("");
+      await updateOrderStatus(id, status);
     } catch (err) {
       setError(err.message);
     }
@@ -23,10 +23,10 @@ export default function AdminOrders() {
           {error}
         </p>
       )}
-      {!db.orders.length ? (
+      {!orders.length ? (
         <p>No hay pedidos registrados.</p>
       ) : (
-        db.orders.map((o) => (
+        orders.map((o) => (
           <article className="card p-4 mb-3" key={o.id}>
             <h2 className="h5">{o.number}</h2>
             <p>

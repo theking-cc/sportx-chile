@@ -56,9 +56,22 @@ El recorrido crea datos de prueba en un navegador aislado, comprueba los flujos 
 3. En otra terminal levanta el frontend: `cd frontend`, `npm install`, `npm run dev` y abre http://localhost:5173.
    Vite redirige `/api` a `http://localhost:8080` (ver `frontend/vite.config.js`). Para otra URL usa `VITE_API_URL`.
 
-Con el backend activo, el catálogo, las categorías, el login/registro (JWT) y el carrito del cliente se leen y guardan en MariaDB.
+Con el backend activo todo se lee y guarda en MariaDB: catálogo, categorías, login/registro (JWT), carrito,
+pedidos (descuentan y reponen stock), mensajes de contacto, administración de usuarios y perfil.
 Si el backend no responde, la tienda usa los datos locales de demostración y lo indica en pantalla.
-Pedidos, mensajes de contacto y administración de usuarios siguen siendo locales hasta que existan sus endpoints.
+
+| Endpoint | Acceso |
+| --- | --- |
+| `POST /api/auth/login`, `POST /api/auth/registro` | público |
+| `GET /api/productos`, `/api/categorias`, `/api/comunas` | público |
+| `POST /api/mensajes` | público |
+| `/api/carrito/**`, `POST /api/ordenes`, `GET /api/ordenes/mias` | Cliente |
+| `GET /api/ordenes`, `PATCH /api/ordenes/{id}/estado`, `GET /api/mensajes` | Administrador, Vendedor |
+| `POST/PUT /api/productos` | Administrador, Vendedor |
+| `DELETE /api/productos/{id}`, `/api/categorias` (escritura), `/api/usuarios/**` | Administrador |
+| `GET/PUT /api/usuarios/me` | cualquier usuario con sesión |
+
+Cupones válidos en el backend: `DUOC10` (10 %) y `SPORTX2026` ($5.000).
 
 ## Acceso de demostración
 

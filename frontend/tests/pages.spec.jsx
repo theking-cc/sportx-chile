@@ -97,7 +97,7 @@ describe("Vistas, navegación y formularios", () => {
     expect(screen.getByText(/Código obligatorio/)).toBeTruthy();
     expect(state().products.length).toBe(3);
   });
-  it("crea y edita un usuario y permite eliminarlo desde administración", () => {
+  it("crea y edita un usuario y permite eliminarlo desde administración", async () => {
     seed();
     mount("/admin/usuarios/nuevo");
     field("RUN (sin puntos ni guion)", "123456785");
@@ -118,18 +118,20 @@ describe("Vistas, navegación y formularios", () => {
     expect(state().users.find((u) => u.id === user.id).rol).toBe("Vendedor");
     spyOn(window, "confirm").and.returnValue(true);
     fireEvent.click(
-      screen.getByText("nuevo@gmail.com").closest("tr").querySelector("button"),
+      (await screen.findByText("nuevo@gmail.com"))
+        .closest("tr")
+        .querySelector("button"),
     );
     expect(state().users.some((u) => u.id === user.id)).toBeFalse();
   });
-  it("actualiza el perfil manteniendo la contraseña si el campo está vacío", () => {
+  it("actualiza el perfil manteniendo la contraseña si el campo está vacío", async () => {
     const { db, user } = seed("Cliente");
     user.password = "fixture"; // Valor ficticio exclusivo de esta prueba.
     repo.saveDatabase(db);
     mount("/perfil");
     field("Nombre", "Actualizado");
     fireEvent.click(screen.getByRole("button", { name: "Guardar cambios" }));
-    expect(screen.getByText("Perfil actualizado.")).toBeTruthy();
+    expect(await screen.findByText("Perfil actualizado.")).toBeTruthy();
     expect(state().users.find((u) => u.id === "demo-client").password).toBe(
       "fixture",
     );

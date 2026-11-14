@@ -1,16 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useShop } from "../context/ShopContext.jsx";
 import Field from "../components/Field.jsx";
+import { ComunaOptions } from "../components/UserFields.jsx";
 import { REGIONS, COUPONS, money } from "../data/seed.js";
 import { total } from "../services/cart.js";
 export default function Checkout() {
-  const { user, cart, purchase } = useShop();
+  const { user, cart, purchase, remote, comunas } = useShop();
   const [shipping, setShipping] = useState({
     direccion: user.direccion || "",
     region: user.region || "",
     comuna: user.comuna || "",
+    idComuna: user.idComuna || "",
   });
+  // Con backend se elige la comuna por id; se precarga desde el perfil.
+  useEffect(() => {
+    if (!remote) return;
+    setShipping((prev) => ({
+      ...prev,
+      direccion: prev.direccion || user.direccion || "",
+      idComuna: prev.idComuna || user.idComuna || "",
+    }));
+  }, [remote, user.direccion, user.idComuna]);
   const location = useLocation();
   const [coupon, setCoupon] = useState(location.state?.coupon || "");
   const [error, setError] = useState("");
@@ -20,7 +31,7 @@ export default function Checkout() {
     cart,
     COUPONS.find((c) => c.codigo === coupon.trim().toUpperCase()),
   );
-  const comunas =
+  const regionComunas =
     REGIONS.find((r) => r.region === shipping.region)?.comunas || [];
   function change(k, v) {
     setShipping((prev) => ({
@@ -32,6 +43,10 @@ export default function Checkout() {
   async function submit(e) {
     e.preventDefault();
     if (busy) return;
+    if (remote && (!shipping.direccion.trim() || !shipping.idComuna)) {
+      setError("Completa la dirección y la comuna de despacho.");
+      return;
+    }
     setBusy(true);
     try {
       const order = await purchase(shipping, coupon);
@@ -52,7 +67,11 @@ export default function Checkout() {
   return (
     <section className="card p-4 mx-auto form-card">
       <h1>Finalizar compra</h1>
-      <p>Compra de demostración. No se realiza ningún cobro.</p>
+      <p>
+        {remote
+          ? "El pedido se registrará y el stock se descontará al confirmar. No se realiza ningún cobro."
+          : "Compra de demostración. No se realiza ningún cobro."}
+      </p>
       {error && (
         <p role="alert" className="alert alert-danger">
           {error}
@@ -67,30 +86,45 @@ export default function Checkout() {
           required
           maxLength="300"
         />
-        <Field
-          label="Región"
-          name="region"
-          value={shipping.region}
-          onChange={change}
-          required
-        >
-          <option value="">Selecciona una región</option>
-          {REGIONS.map((r) => (
-            <option key={r.region}>{r.region}</option>
-          ))}
-        </Field>
-        <Field
-          label="Comuna"
-          name="comuna"
-          value={shipping.comuna}
-          onChange={change}
-          required
-        >
-          <option value="">Selecciona una comuna</option>
-          {comunas.map((c) => (
-            <option key={c}>{c}</option>
-          ))}
-        </Field>
+        {remote ? (
+          <Field
+            label="Comuna"
+            name="idComuna"
+            value={String(shipping.idComuna || "")}
+            onChange={change}
+            required
+          >
+            <option value="">Selecciona una comuna</option>
+            <ComunaOptions comunas={comunas} />
+          </Field>
+        ) : (
+          <>
+            <Field
+              label="Región"
+              name="region"
+              value={shipping.region}
+              onChange={change}
+              required
+            >
+              <option value="">Selecciona una región</option>
+              {REGIONS.map((r) => (
+                <option key={r.region}>{r.region}</option>
+              ))}
+            </Field>
+            <Field
+              label="Comuna"
+              name="comuna"
+              value={shipping.comuna}
+              onChange={change}
+              required
+            >
+              <option value="">Selecciona una comuna</option>
+              {regionComunas.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+            </Field>
+          </>
+        )}
         <Field
           label="Cupón (opcional)"
           name="coupon"

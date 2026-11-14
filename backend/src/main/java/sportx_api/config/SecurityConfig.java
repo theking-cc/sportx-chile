@@ -60,6 +60,25 @@ public class SecurityConfig {
                     "/api/comunas"
                 ).permitAll()
 
+                // FORMULARIO DE CONTACTO (público)
+                .requestMatchers(HttpMethod.POST, "/api/mensajes").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/mensajes")
+                    .hasAnyRole("ADMIN", "VENDEDOR")
+
+                // PEDIDOS
+                .requestMatchers(HttpMethod.POST, "/api/ordenes").hasRole("CLIENTE")
+                .requestMatchers(HttpMethod.GET, "/api/ordenes/mias").hasRole("CLIENTE")
+                .requestMatchers(HttpMethod.GET, "/api/ordenes")
+                    .hasAnyRole("ADMIN", "VENDEDOR")
+                .requestMatchers(HttpMethod.PATCH, "/api/ordenes/*/estado")
+                    .hasAnyRole("ADMIN", "VENDEDOR")
+
+                // PERFIL PROPIO (cualquier usuario autenticado)
+                .requestMatchers("/api/usuarios/me").authenticated()
+
+                // ADMINISTRACIÓN DE USUARIOS
+                .requestMatchers("/api/usuarios", "/api/usuarios/**").hasRole("ADMIN")
+
                 // CARRITO: SOLO CLIENTES
                 .requestMatchers(
                     "/api/carrito",

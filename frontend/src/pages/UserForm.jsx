@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useShop } from "../context/ShopContext.jsx";
-import { saveUser } from "../services/repository.js";
 import { validateUser } from "../services/validation.js";
 import UserFields, { emptyUser } from "../components/UserFields.jsx";
 import AdminNav from "../components/AdminNav.jsx";
 export default function UserForm() {
   const { id } = useParams();
-  const { db, changeDatabase } = useShop();
-  const existing = db.users.find((u) => u.id === id);
+  const { users, saveUserAdmin, remote, comunas } = useShop();
+  const existing = users.find((u) => u.id === id);
   const [form, setForm] = useState(
     existing ? { ...existing, password: "" } : emptyUser,
   );
   const [errors, setErrors] = useState({});
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
   if (id && !existing)
     return (
@@ -22,16 +22,24 @@ export default function UserForm() {
         <Link to="/admin/usuarios">Volver</Link>
       </>
     );
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
-    const next = validateUser(form, { passwordRequired: !id });
+    if (busy) return;
+    const next = validateUser(form, {
+      passwordRequired: !id,
+      remote,
+      editing: !!id,
+    });
     setErrors(next);
     if (Object.keys(next).length) return;
+    setBusy(true);
+    setError("");
     try {
-      changeDatabase((db, actor) => saveUser(db, form, actor));
+      await saveUserAdmin(form);
       navigate("/admin/usuarios");
     } catch (err) {
       setError(err.message);
+      setBusy(false);
     }
   }
   return (
@@ -50,9 +58,12 @@ export default function UserForm() {
             editing={!!id}
             value={form}
             errors={errors}
+            comunas={remote ? comunas : null}
             onChange={(k, v) => setForm((prev) => ({ ...prev, [k]: v }))}
           />
-          <button className="btn btn-danger">Guardar usuario</button>
+          <button className="btn btn-danger" disabled={busy}>
+            Guardar usuario
+          </button>
           <Link to="/admin/usuarios" className="ms-3">
             Cancelar
           </Link>

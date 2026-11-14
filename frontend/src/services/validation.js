@@ -38,16 +38,23 @@ export function validarRunChileno(runCompleto) {
 // remote = true: reglas del backend (contraseña de 8+ caracteres y comuna por id).
 export function validateUser(
   user,
-  { passwordRequired = true, remote = false } = {},
+  { passwordRequired = true, remote = false, editing = false } = {},
 ) {
   const errors = {};
-  if (!validarRunChileno(user.run || ""))
+  // Al editar un usuario del servidor el RUN no cambia y el correo puede ser
+  // de cualquier dominio (cuentas creadas antes de la regla de dominios).
+  const relaxed = remote && editing;
+  if (!relaxed && !validarRunChileno(user.run || ""))
     errors.run = "Ingresa un RUN válido sin puntos ni guion.";
   if (!user.nombre?.trim() || user.nombre.length > 50)
     errors.nombre = "Nombre obligatorio, máximo 50 caracteres.";
   if (!user.apellidos?.trim() || user.apellidos.length > 100)
     errors.apellidos = "Apellidos obligatorios, máximo 100 caracteres.";
-  if (!validarEmailDominio(user.correo || "") || user.correo.length > 100)
+  if (
+    relaxed
+      ? !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.correo || "")
+      : !validarEmailDominio(user.correo || "") || user.correo.length > 100
+  )
     errors.correo = "Usa un correo @duoc.cl, @profesor.duoc.cl o @gmail.com.";
   if (remote) {
     if (

@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { useShop } from "../context/ShopContext.jsx";
 import { money } from "../data/seed.js";
 export default function Orders() {
-  const { db, user } = useShop();
-  const orders = db.orders.filter((o) => o.userId === user.id);
+  const { orders: all, user } = useShop();
+  const orders = all.filter((o) => o.userId === user.id);
   return (
     <>
       <h1>Mis pedidos</h1>
