@@ -244,7 +244,10 @@ export function ShopProvider({ children }) {
       setLocalUser(next);
       return next;
     }
-    const next = await api.login(email, password);
+    return finishRemoteLogin(await api.login(email, password));
+  }
+  // Común a correo/contraseña y Google: deja la sesión del servidor activa.
+  async function finishRemoteLogin(next) {
     repo.logout();
     setLocalUser(null);
     // Traspasa al carrito del servidor lo que el visitante agregó sin sesión.
@@ -261,6 +264,15 @@ export function ShopProvider({ children }) {
     }
     setRemoteUser(next);
     return next;
+  }
+  // Google: si la cuenta no existe devuelve { pendiente: true, ... }.
+  async function signInGoogle(credential) {
+    const result = await api.loginGoogle(credential);
+    if (result.pendiente) return result;
+    return finishRemoteLogin(result);
+  }
+  async function completeGoogleRegistration(credential, form) {
+    return finishRemoteLogin(await api.registroGoogle(credential, form));
   }
   function signInDemo(userId) {
     const current = repo.loadDatabase();
@@ -429,6 +441,8 @@ export function ShopProvider({ children }) {
         changeDatabase,
         signIn,
         signInDemo,
+        signInGoogle,
+        completeGoogleRegistration,
         signOut,
         register,
         saveProduct,

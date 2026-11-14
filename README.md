@@ -73,6 +73,20 @@ Si el backend no responde, la tienda usa los datos locales de demostración y lo
 
 Cupones válidos en el backend: `DUOC10` (10 %) y `SPORTX2026` ($5.000).
 
+## Inicio de sesión con Google
+
+1. **Migración (una vez, segura):** agrega la columna opcional `google_sub` a `usuarios`; no modifica datos.
+   ```powershell
+   mysql -u root -p sportx_db_v2 < backend/src/main/resources/db/migraciones/V2__google_auth.sql
+   ```
+2. **Google Cloud Console** → APIs y servicios → Credenciales → *Crear ID de cliente OAuth* → tipo **Aplicación web**.
+   Orígenes de JavaScript autorizados: `http://localhost:5173` y `http://localhost`.
+3. **Backend:** agrega a tu `.env` (el que usa `launch.json`): `GOOGLE_CLIENT_ID=<tu-id>.apps.googleusercontent.com`
+4. **Frontend:** crea `frontend/.env.local` con `VITE_GOOGLE_CLIENT_ID=<el mismo id>` y reinicia `npm run dev`.
+
+Flujo: si el correo de Google ya tiene cuenta, se vincula y entra; si no, se pide RUT, comuna y dirección (`/registro-google`) y se crea como Cliente.
+El backend valida firma, emisor, audiencia, vigencia y correo verificado del token de Google.
+
 ## Acceso de demostración
 
 En Iniciar sesión, abre **Acceso de demostración** y elige **Entrar como Administrador**, **Entrar como Vendedor** o **Entrar como Cliente**. Son cuentas ficticias para probar los roles y no publican contraseñas. El formulario de login también permite entrar con cuentas que registres tú mismo.

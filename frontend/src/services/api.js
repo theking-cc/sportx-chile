@@ -227,6 +227,42 @@ export const api = {
     setAuth({ token: r.token, user });
     return user;
   },
+  // Google: devuelve { pendiente:true, email, nombre, apellidos } o el usuario con sesión.
+  async loginGoogle(credential) {
+    const r = await request("/auth/google", {
+      method: "POST",
+      body: { credential },
+      auth: false,
+    });
+    if (r.registroPendiente)
+      return {
+        pendiente: true,
+        email: r.email,
+        nombre: r.nombre || "",
+        apellidos: r.apellidos || "",
+      };
+    const user = toUser(r.sesion);
+    setAuth({ token: r.sesion.token, user });
+    return user;
+  },
+  async registroGoogle(credential, form) {
+    const r = await request("/auth/google/registro", {
+      method: "POST",
+      auth: false,
+      body: {
+        credential,
+        rut: formatRut(form.run),
+        nombre: form.nombre.trim(),
+        apellidos: form.apellidos.trim(),
+        idComuna: Number(form.idComuna),
+        direccion: form.direccion.trim(),
+        fechaNacimiento: form.fechaNacimiento || null,
+      },
+    });
+    const user = toUser(r);
+    setAuth({ token: r.token, user });
+    return user;
+  },
   register(form) {
     return request("/auth/registro", {
       method: "POST",

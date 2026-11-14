@@ -15,6 +15,7 @@ import Article from "./pages/Article.jsx";
 import Contact from "./pages/Contact.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import GoogleRegister from "./pages/GoogleRegister.jsx";
 import Profile from "./pages/Profile.jsx";
 import Orders from "./pages/Orders.jsx";
 import OrderDetail from "./pages/OrderDetail.jsx";
@@ -38,6 +39,7 @@ export const VIEW_ROUTES = [
   ["/contacto", Contact],
   ["/login", Login],
   ["/registro", Register],
+  ["/registro-google", GoogleRegister],
   ["/perfil", Profile, "user"],
   ["/pedidos", Orders, "user"],
   ["/pedidos/:id", OrderDetail, "user"],

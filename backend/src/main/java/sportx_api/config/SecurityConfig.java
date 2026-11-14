@@ -47,7 +47,9 @@ public class SecurityConfig {
                 // LOGIN Y REGISTRO PÚBLICOS
                 .requestMatchers(
                     "/api/auth/registro",
-                    "/api/auth/login"
+                    "/api/auth/login",
+                    "/api/auth/google",
+                    "/api/auth/google/registro"
                 ).permitAll()
 
                 // CONSULTAR PRODUCTOS Y CATEGORÍAS

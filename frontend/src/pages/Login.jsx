@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useShop } from "../context/ShopContext.jsx";
 import Field from "../components/Field.jsx";
+import GoogleSignIn from "../components/GoogleSignIn.jsx";
 export default function Login() {
   const [form, setForm] = useState({ correo: "", password: "" });
   const [error, setError] = useState("");
@@ -68,6 +69,7 @@ export default function Login() {
           {busy ? "Ingresando..." : "Ingresar"}
         </button>
       </form>
+      <GoogleSignIn />
       <p className="mt-3">
         ¿No tienes cuenta? <Link to="/registro">Regístrate</Link>
       </p>

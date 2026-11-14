@@ -22,6 +22,9 @@ public interface UsuarioRepository
     @Query("SELECT u FROM Usuario u WHERE u.id = :id")
     Optional<Usuario> findByIdConRol(@Param("id") Long id);
 
+    @EntityGraph(attributePaths = "rol")
+    Optional<Usuario> findByGoogleSub(String googleSub);
+
     boolean existsByEmailIgnoreCase(String email);
 
     boolean existsByRut(String rut);

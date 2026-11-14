@@ -30,6 +30,10 @@ public class Usuario {
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
+    // Cuenta Google vinculada (claim "sub"); null si nunca usó Google.
+    @Column(name = "google_sub", unique = true, length = 255)
+    private String googleSub;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_rol", nullable = false)
     private Rol rol;
@@ -101,6 +105,14 @@ public class Usuario {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public String getGoogleSub() {
+        return googleSub;
+    }
+
+    public void setGoogleSub(String googleSub) {
+        this.googleSub = googleSub;
     }
 
     public Rol getRol() {

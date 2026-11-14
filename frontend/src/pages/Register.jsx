@@ -5,6 +5,7 @@ import { api } from "../services/api.js";
 import { validateUser } from "../services/validation.js";
 import UserFields, { emptyUser } from "../components/UserFields.jsx";
 import Field from "../components/Field.jsx";
+import GoogleSignIn from "../components/GoogleSignIn.jsx";
 export default function Register() {
   const [form, setForm] = useState(emptyUser);
   const [confirm, setConfirm] = useState("");
@@ -51,7 +52,8 @@ export default function Register() {
           {error}
         </p>
       )}
-      <form noValidate onSubmit={submit}>
+      <GoogleSignIn text="signup_with" />
+      <form noValidate onSubmit={submit} className="mt-3">
         <UserFields
           value={form}
           errors={errors}
