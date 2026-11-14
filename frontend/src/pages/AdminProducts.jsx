@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useShop } from "../context/ShopContext.jsx";
-import { deleteProduct } from "../services/repository.js";
 import AdminNav from "../components/AdminNav.jsx";
 import { money } from "../data/seed.js";
 export default function AdminProducts() {
-  const { products, changeDatabase } = useShop();
+  const { products, removeProduct } = useShop();
   const [error, setError] = useState("");
-  function remove(p) {
+  async function remove(p) {
     if (!window.confirm("¿Eliminar " + p.nombre + "?")) return;
+    setError("");
     try {
-      changeDatabase((db, actor) => deleteProduct(db, p.id, actor));
+      await removeProduct(p.id);
     } catch (err) {
       setError(err.message);
     }

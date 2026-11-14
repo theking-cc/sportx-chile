@@ -56,7 +56,8 @@ public class SecurityConfig {
                     "/api/productos",
                     "/api/productos/*",
                     "/api/categorias",
-                    "/api/categorias/*"
+                    "/api/categorias/*",
+                    "/api/comunas"
                 ).permitAll()
 
                 // CARRITO: SOLO CLIENTES

@@ -42,6 +42,24 @@ npm run test:e2e
 
 El recorrido crea datos de prueba en un navegador aislado, comprueba los flujos de las 21 vistas y guarda dos capturas en `tests/browser-output/`. No cambia los datos de tu navegador habitual. Arranca su propio servidor Vite en el puerto 4175.
 
+## Conectar frontend con backend (MariaDB)
+
+1. Inicia MariaDB con la base `sportx_db_v2` (usuario y clave en `backend/src/main/resources/application.properties`).
+2. Define la clave JWT (Base64 de al menos 32 bytes) y levanta el backend en el puerto 8080:
+
+   ```powershell
+   cd backend
+   $env:SPORTX_JWT_SECRET = "<tu-clave-base64>"
+   .\mvnw.cmd spring-boot:run
+   ```
+
+3. En otra terminal levanta el frontend: `cd frontend`, `npm install`, `npm run dev` y abre http://localhost:5173.
+   Vite redirige `/api` a `http://localhost:8080` (ver `frontend/vite.config.js`). Para otra URL usa `VITE_API_URL`.
+
+Con el backend activo, el catálogo, las categorías, el login/registro (JWT) y el carrito del cliente se leen y guardan en MariaDB.
+Si el backend no responde, la tienda usa los datos locales de demostración y lo indica en pantalla.
+Pedidos, mensajes de contacto y administración de usuarios siguen siendo locales hasta que existan sus endpoints.
+
 ## Acceso de demostración
 
 En Iniciar sesión, abre **Acceso de demostración** y elige **Entrar como Administrador**, **Entrar como Vendedor** o **Entrar como Cliente**. Son cuentas ficticias para probar los roles y no publican contraseñas. El formulario de login también permite entrar con cuentas que registres tú mismo.

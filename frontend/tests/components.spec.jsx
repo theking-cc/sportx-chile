@@ -121,7 +121,7 @@ describe("Componentes SportX: diez pruebas Jasmine/Karma", () => {
     expect(screen.getByText(/Nombre obligatorio/)).toBeTruthy();
     expect(localStorage.getItem(DATABASE_KEY)).toBeNull();
   });
-  it("09 login rechaza credenciales erróneas y navega con credenciales simuladas válidas", () => {
+  it("09 login rechaza credenciales erróneas y navega con credenciales simuladas válidas", async () => {
     const db = loadDatabase();
     db.users = [
       {
@@ -141,17 +141,19 @@ describe("Componentes SportX: diez pruebas Jasmine/Karma", () => {
       target: { value: "wrong" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Ingresar" }));
-    expect(screen.getByRole("alert").textContent).toContain("incorrectos");
+    expect((await screen.findByRole("alert")).textContent).toContain(
+      "incorrectos",
+    );
     fireEvent.change(screen.getByLabelText("Contraseña"), {
       target: { value: "1234" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Ingresar" }));
     expect(
-      screen.getByRole("heading", { name: "Perfil de prueba" }),
+      await screen.findByRole("heading", { name: "Perfil de prueba" }),
     ).toBeTruthy();
     expect(JSON.parse(localStorage.getItem(SESSION_KEY)).id).toBe("mock-user");
   });
-  it("10 confirmar compra guarda el pedido, descuenta inventario y vacía el carrito", () => {
+  it("10 confirmar compra guarda el pedido, descuenta inventario y vacía el carrito", async () => {
     const db = loadDatabase();
     db.cart = [{ ...db.products[0], cantidad: 2 }];
     saveDatabase(db);
@@ -159,7 +161,7 @@ describe("Componentes SportX: diez pruebas Jasmine/Karma", () => {
     mount(<Checkout />, [["/compra-confirmada/:id", "Compra confirmada"]]);
     fireEvent.click(screen.getByRole("button", { name: "Confirmar pedido" }));
     expect(
-      screen.getByRole("heading", { name: "Compra confirmada" }),
+      await screen.findByRole("heading", { name: "Compra confirmada" }),
     ).toBeTruthy();
     expect(stored().orders.length).toBe(1);
     expect(stored().products[0].stock).toBe(10);

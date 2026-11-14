@@ -19,8 +19,10 @@ export default function UserFields({
   errors = {},
   editing = false,
   admin = false,
+  comunas = null, // comunas del backend: [{ id, idRegion, nombre }]
 }) {
-  const comunas = REGIONS.find((r) => r.region === value.region)?.comunas || [];
+  const regionComunas =
+    REGIONS.find((r) => r.region === value.region)?.comunas || [];
   function change(name, val) {
     onChange(name, val);
     if (name === "region") onChange("comuna", "");
@@ -77,14 +79,16 @@ export default function UserFields({
         label={
           editing
             ? "Nueva contraseña (opcional)"
-            : "Contraseña (4 a 10 caracteres)"
+            : comunas
+              ? "Contraseña (mínimo 8 caracteres)"
+              : "Contraseña (4 a 10 caracteres)"
         }
         name="password"
         value={value.password}
         onChange={change}
         error={errors.password}
         type="password"
-        maxLength="10"
+        maxLength={comunas ? "72" : "10"}
         autoComplete={editing ? "new-password" : "new-password"}
       />
       <div className="row">
@@ -110,36 +114,53 @@ export default function UserFields({
           />
         </div>
       </div>
-      <div className="row">
-        <div className="col-md-6">
-          <Field
-            label="Región"
-            name="region"
-            value={value.region}
-            onChange={change}
-          >
-            <option value="">Selecciona una región</option>
-            {REGIONS.map((r) => (
-              <option key={r.region}>{r.region}</option>
-            ))}
-          </Field>
+      {comunas ? (
+        <Field
+          label="Comuna"
+          name="idComuna"
+          value={value.idComuna || ""}
+          onChange={change}
+          error={errors.comuna}
+        >
+          <option value="">Selecciona una comuna</option>
+          {comunas.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.nombre}
+            </option>
+          ))}
+        </Field>
+      ) : (
+        <div className="row">
+          <div className="col-md-6">
+            <Field
+              label="Región"
+              name="region"
+              value={value.region}
+              onChange={change}
+            >
+              <option value="">Selecciona una región</option>
+              {REGIONS.map((r) => (
+                <option key={r.region}>{r.region}</option>
+              ))}
+            </Field>
+          </div>
+          <div className="col-md-6">
+            <Field
+              label="Comuna"
+              name="comuna"
+              value={value.comuna}
+              onChange={change}
+              error={errors.comuna}
+              disabled={!value.region}
+            >
+              <option value="">Selecciona una comuna</option>
+              {regionComunas.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+            </Field>
+          </div>
         </div>
-        <div className="col-md-6">
-          <Field
-            label="Comuna"
-            name="comuna"
-            value={value.comuna}
-            onChange={change}
-            error={errors.comuna}
-            disabled={!value.region}
-          >
-            <option value="">Selecciona una comuna</option>
-            {comunas.map((c) => (
-              <option key={c}>{c}</option>
-            ))}
-          </Field>
-        </div>
-      </div>
+      )}
       <Field
         label="Dirección"
         name="direccion"

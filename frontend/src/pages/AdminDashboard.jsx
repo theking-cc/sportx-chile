@@ -3,8 +3,8 @@ import AdminNav from "../components/AdminNav.jsx";
 import { money } from "../data/seed.js";
 import { exportDatabase } from "../services/repository.js";
 export default function AdminDashboard() {
-  const { db, user } = useShop();
-  const critical = db.products.filter((p) => p.stock <= p.stockCritico);
+  const { db, user, products } = useShop();
+  const critical = products.filter((p) => p.stock <= p.stockCritico);
   function download() {
     const url = URL.createObjectURL(
       new Blob([exportDatabase(db)], { type: "application/json" }),
@@ -24,7 +24,7 @@ export default function AdminDashboard() {
       </p>
       <div className="row g-3 mb-4">
         {[
-          ["Productos", db.products.length],
+          ["Productos", products.length],
           ["Stock crítico", critical.length],
           ["Pedidos", db.orders.length],
           [

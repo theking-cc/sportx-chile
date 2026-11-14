@@ -60,7 +60,7 @@ function Page({ Component, access }) {
   return access ? <ProtectedRoute roles={roles}>{page}</ProtectedRoute> : page;
 }
 export default function App() {
-  const { message, dismiss } = useShop();
+  const { message, dismiss, online } = useShop();
   const location = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -69,6 +69,12 @@ export default function App() {
     <div className="d-flex flex-column min-vh-100">
       <Navbar />
       <main id="main-content" className="container py-4 py-md-5 flex-grow-1">
+        {online === false && (
+          <p className="small text-muted border rounded p-2">
+            Sin conexión con el servidor: se muestran datos locales de
+            demostración.
+          </p>
+        )}
         {message && (
           <div
             role="status"

@@ -5,7 +5,8 @@ import Field from "../components/Field.jsx";
 export default function Login() {
   const [form, setForm] = useState({ correo: "", password: "" });
   const [error, setError] = useState("");
-  const { signIn, signInDemo, db } = useShop();
+  const { signIn, signInDemo, db, online } = useShop();
+  const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   function enterDemo(userId) {
@@ -19,10 +20,13 @@ export default function Login() {
       setError(err.message);
     }
   }
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
+    if (busy) return;
+    setBusy(true);
+    setError("");
     try {
-      const user = signIn(form.correo, form.password);
+      const user = await signIn(form.correo, form.password);
       const from = location.state?.from;
       navigate(from || (user.rol === "Cliente" ? "/perfil" : "/admin"), {
         replace: true,
@@ -30,6 +34,7 @@ export default function Login() {
       });
     } catch (err) {
       setError(err.message);
+      setBusy(false);
     }
   }
   return (
@@ -59,30 +64,34 @@ export default function Login() {
           required
           autoComplete="current-password"
         />
-        <button className="btn btn-danger w-100">Ingresar</button>
+        <button className="btn btn-danger w-100" disabled={busy}>
+          {busy ? "Ingresando..." : "Ingresar"}
+        </button>
       </form>
       <p className="mt-3">
         ¿No tienes cuenta? <Link to="/registro">Regístrate</Link>
       </p>
-      <details>
-        <summary>Acceso de demostración</summary>
-        <p className="small mt-2">
-          Prueba la tienda con un rol ficticio. No se necesitan credenciales.
-        </p>
-        <div className="d-flex flex-wrap gap-2">
-          {db.users
-            .filter((u) => u.demo)
-            .map((u) => (
-              <button
-                key={u.id}
-                className="btn btn-outline-dark"
-                onClick={() => enterDemo(u.id)}
-              >
-                Entrar como {u.rol}
-              </button>
-            ))}
-        </div>
-      </details>
+      {online !== true && (
+        <details>
+          <summary>Acceso de demostración</summary>
+          <p className="small mt-2">
+            Prueba la tienda con un rol ficticio. No se necesitan credenciales.
+          </p>
+          <div className="d-flex flex-wrap gap-2">
+            {db.users
+              .filter((u) => u.demo)
+              .map((u) => (
+                <button
+                  key={u.id}
+                  className="btn btn-outline-dark"
+                  onClick={() => enterDemo(u.id)}
+                >
+                  Entrar como {u.rol}
+                </button>
+              ))}
+          </div>
+        </details>
+      )}
     </section>
   );
 }

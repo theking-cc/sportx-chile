@@ -11,6 +11,13 @@ export default function Profile() {
   const [failed, setFailed] = useState(false);
   function submit(e) {
     e.preventDefault();
+    if (user.remote) {
+      setMessage(
+        "La edición del perfil aún no está disponible en el servidor.",
+      );
+      setFailed(true);
+      return;
+    }
     const next = validateUser(form, { passwordRequired: false });
     setErrors(next);
     if (Object.keys(next).length) return;

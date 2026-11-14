@@ -35,7 +35,11 @@ export function validarRunChileno(runCompleto) {
   return dv === dvEsperado;
 }
 
-export function validateUser(user, { passwordRequired = true } = {}) {
+// remote = true: reglas del backend (contraseña de 8+ caracteres y comuna por id).
+export function validateUser(
+  user,
+  { passwordRequired = true, remote = false } = {},
+) {
   const errors = {};
   if (!validarRunChileno(user.run || ""))
     errors.run = "Ingresa un RUN válido sin puntos ni guion.";
@@ -45,12 +49,20 @@ export function validateUser(user, { passwordRequired = true } = {}) {
     errors.apellidos = "Apellidos obligatorios, máximo 100 caracteres.";
   if (!validarEmailDominio(user.correo || "") || user.correo.length > 100)
     errors.correo = "Usa un correo @duoc.cl, @profesor.duoc.cl o @gmail.com.";
-  if (
+  if (remote) {
+    if (
+      (passwordRequired || user.password) &&
+      (!user.password || user.password.length < 8 || user.password.length > 72)
+    )
+      errors.password = "La contraseña debe tener al menos 8 caracteres.";
+  } else if (
     (passwordRequired || user.password) &&
     (!user.password || user.password.length < 4 || user.password.length > 10)
   )
     errors.password = "La contraseña debe tener entre 4 y 10 caracteres.";
-  if (
+  if (remote) {
+    if (!user.idComuna) errors.comuna = "Selecciona una comuna.";
+  } else if (
     !REGIONS.find((r) => r.region === user.region)?.comunas.includes(
       user.comuna,
     )
@@ -68,7 +80,8 @@ export function validateUser(user, { passwordRequired = true } = {}) {
     errors.fechaNacimiento = "La fecha no puede estar en el futuro.";
   return errors;
 }
-export function validateProduct(product) {
+// categorias: lista del backend; si viene, la categoría se valida por id.
+export function validateProduct(product, categorias = null) {
   const errors = {};
   if (!product.codigo?.trim() || product.codigo.length < 3)
     errors.codigo = "Código obligatorio, mínimo 3 caracteres.";
@@ -83,7 +96,10 @@ export function validateProduct(product) {
       Number(product[key]) < 0
     )
       errors[key] = "Ingresa un entero mayor o igual a cero.";
-  if (
+  if (categorias?.length) {
+    if (!categorias.some((c) => String(c.id) === String(product.categoriaId)))
+      errors.categoria = "Selecciona una categoría.";
+  } else if (
     !["Boxeo", "Fitness", "Calzado", "Accesorios"].includes(product.categoria)
   )
     errors.categoria = "Selecciona una categoría.";

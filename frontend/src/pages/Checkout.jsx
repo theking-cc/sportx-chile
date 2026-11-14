@@ -29,12 +29,12 @@ export default function Checkout() {
       ...(k === "region" ? { comuna: "" } : {}),
     }));
   }
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
     if (busy) return;
     setBusy(true);
     try {
-      const order = purchase(shipping, coupon);
+      const order = await purchase(shipping, coupon);
       navigate("/compra-confirmada/" + order.id, { replace: true });
     } catch (err) {
       setError(err.message);
