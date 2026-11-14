@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useShop } from "../context/ShopContext.jsx";
 import ProductCard from "../components/ProductCard.jsx";
 export default function Catalog() {
-  const { products } = useShop();
+  const { products, loading } = useShop();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const filtered = products.filter(
@@ -48,7 +48,11 @@ export default function Catalog() {
           <ProductCard key={p.id} product={p} />
         ))}
       </div>
-      {!filtered.length && <p role="status">No encontramos productos.</p>}
+      {!filtered.length && (
+        <p role="status">
+          {loading ? "Cargando productos…" : "No encontramos productos."}
+        </p>
+      )}
     </>
   );
 }

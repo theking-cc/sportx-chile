@@ -20,7 +20,10 @@ export function ShopProvider({ children }) {
   const [remoteUser, setRemoteUser] = useState(() => getAuth()?.user || null);
   const [localUser, setLocalUser] = useState(() => repo.sessionUser(db));
   const [message, setMessage] = useState("");
-  const [online, setOnline] = useState(null); // null = comprobando
+  // null = comprobando; las pruebas fuerzan el modo local con __SPORTX_OFFLINE__.
+  const forcedOffline =
+    typeof window !== "undefined" && window.__SPORTX_OFFLINE__ === true;
+  const [online, setOnline] = useState(forcedOffline ? false : null);
   const [apiProducts, setApiProducts] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [serverCart, setServerCart] = useState(null);
@@ -30,7 +33,9 @@ export function ShopProvider({ children }) {
   const [remoteUsers, setRemoteUsers] = useState([]);
 
   const user = remoteUser || localUser;
-  const products = online ? apiProducts : db.products;
+  // Mientras se comprueba el backend no se muestran los productos de demostración.
+  const products =
+    online === true ? apiProducts : online === false ? db.products : [];
   const serverCartMode = online === true && remoteUser?.rol === "Cliente";
   const cart = serverCartMode ? serverCart || [] : db.cart;
   const remote = online === true && !!remoteUser;
@@ -48,6 +53,7 @@ export function ShopProvider({ children }) {
 
   // Comprueba la conexión con el backend al iniciar.
   useEffect(() => {
+    if (forcedOffline) return;
     let active = true;
     Promise.all([
       api.productos(),
@@ -411,6 +417,7 @@ export function ShopProvider({ children }) {
         messages,
         users,
         online,
+        loading: online === null,
         remote,
         add,
         change,

@@ -3,7 +3,7 @@ import AdminNav from "../components/AdminNav.jsx";
 import { money } from "../data/seed.js";
 import { exportDatabase } from "../services/repository.js";
 export default function AdminDashboard() {
-  const { db, user, products, orders, messages } = useShop();
+  const { db, user, products, orders, messages, remote } = useShop();
   const critical = products.filter((p) => p.stock <= p.stockCritico);
   function download() {
     const url = URL.createObjectURL(
@@ -51,13 +51,17 @@ export default function AdminDashboard() {
       )}
       {user.rol === "Administrador" && (
         <>
-          <button className="btn btn-outline-dark mb-4" onClick={download}>
-            Exportar respaldo de datos
-          </button>
-          <p className="small text-muted">
-            El respaldo contiene datos personales y contraseñas de cuentas
-            registradas. Guárdalo solo en tu computador.
-          </p>
+          {!remote && (
+            <>
+              <button className="btn btn-outline-dark mb-4" onClick={download}>
+                Exportar respaldo de datos
+              </button>
+              <p className="small text-muted">
+                El respaldo contiene datos personales y contraseñas de cuentas
+                registradas. Guárdalo solo en tu computador.
+              </p>
+            </>
+          )}
           <h2 className="h4">Consultas recibidas</h2>
           {!messages.length ? (
             <p>No hay consultas.</p>

@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useShop } from "../context/ShopContext.jsx";
 export default function Navbar() {
-  const { cart, user, signOut } = useShop();
+  const { cart, user, signOut, remote } = useShop();
+  // El personal con sesión del servidor no compra: no se muestra el carrito.
+  const showCart = !(remote && user?.rol !== "Cliente");
   const [open, setOpen] = useState(false);
   const links = [
     ["/", "Inicio"],
@@ -44,14 +46,16 @@ export default function Navbar() {
             ))}
           </div>
           <div className="d-flex flex-wrap gap-2 align-items-center">
-            <Link
-              to="/carrito"
-              className="btn btn-outline-dark"
-              onClick={() => setOpen(false)}
-            >
-              <i className="bi bi-cart3 me-2" />
-              Carrito ({cart.reduce((n, p) => n + p.cantidad, 0)})
-            </Link>
+            {showCart && (
+              <Link
+                to="/carrito"
+                className="btn btn-outline-dark"
+                onClick={() => setOpen(false)}
+              >
+                <i className="bi bi-cart3 me-2" />
+                Carrito ({cart.reduce((n, p) => n + p.cantidad, 0)})
+              </Link>
+            )}
             {user ? (
               <>
                 <Link

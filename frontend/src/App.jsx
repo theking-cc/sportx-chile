@@ -65,6 +65,13 @@ export default function App() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+  // Los avisos se cierran solos tras unos segundos para no seguir al usuario.
+  useEffect(() => {
+    if (!message) return;
+    const t = setTimeout(dismiss, 5000);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [message]);
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navbar />

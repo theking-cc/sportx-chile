@@ -31,3 +31,13 @@ main {
     margin-bottom: 1rem;
   }
 }
+
+/* Tablas: no partir precios, fechas ni botones; en pantallas angostas
+   la tabla se desplaza dentro de su contenedor (.table-responsive). */
+.table-responsive .table {
+  white-space: nowrap;
+}
+.table-responsive .table td,
+.table-responsive .table th {
+  vertical-align: middle;
+}

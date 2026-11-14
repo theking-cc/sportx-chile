@@ -1,7 +1,10 @@
 module.exports = function (config) {
   config.set({
     frameworks: ["jasmine", "webpack"],
-    files: [{ pattern: "tests/**/*.spec.jsx", watched: false }],
+    files: [
+      "tests/offline-setup.js",
+      { pattern: "tests/**/*.spec.jsx", watched: false },
+    ],
     preprocessors: { "tests/**/*.spec.jsx": ["webpack"] },
     webpack: {
       mode: "development",
