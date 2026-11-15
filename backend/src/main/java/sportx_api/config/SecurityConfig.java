@@ -147,7 +147,9 @@ public class SecurityConfig {
 
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(origenes.stream().map(String::trim).toList());
+        // Patrones: admite comodines como https://*.floot.app (vista previa y
+        // publicación del frontend en Floot) además de orígenes exactos.
+        config.setAllowedOriginPatterns(origenes.stream().map(String::trim).toList());
 
         config.setAllowedMethods(List.of(
             "GET", "POST", "PUT", "PATCH",
