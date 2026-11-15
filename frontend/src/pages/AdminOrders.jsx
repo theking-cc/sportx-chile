@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useShop } from "../context/ShopContext.jsx";
 import { ORDER_STATES } from "../services/repository.js";
 import AdminNav from "../components/AdminNav.jsx";
@@ -14,7 +15,8 @@ const NEXT_STATES = {
   Cancelado: [],
 };
 export default function AdminOrders() {
-  const { orders, updateOrderStatus } = useShop();
+  const { orders, updateOrderStatus, user } = useShop();
+  const isAdmin = user?.rol === "Administrador";
   const [error, setError] = useState("");
   async function change(id, status) {
     try {
@@ -27,7 +29,7 @@ export default function AdminOrders() {
   return (
     <>
       <AdminNav />
-      <h1>Administración de pedidos</h1>
+      <h1>{isAdmin ? "Administración de pedidos" : "Pedidos"}</h1>
       {error && (
         <p role="alert" className="alert alert-danger">
           {error}
@@ -48,22 +50,37 @@ export default function AdminOrders() {
               {o.pago &&
                 ` · Pago: ${ESTADOS_PAGO[o.pago.estado] || o.pago.estado}`}
             </p>
-            <label htmlFor={"status-" + o.id} className="form-label">
-              Estado del pedido
-            </label>
-            <select
-              id={"status-" + o.id}
-              className="form-select mb-3"
-              value={o.status}
-              disabled={!NEXT_STATES[o.status]?.length}
-              onChange={(e) => change(o.id, e.target.value)}
+            {isAdmin ? (
+              <>
+                <label htmlFor={"status-" + o.id} className="form-label">
+                  Estado del pedido
+                </label>
+                <select
+                  id={"status-" + o.id}
+                  className="form-select mb-3"
+                  value={o.status}
+                  disabled={!NEXT_STATES[o.status]?.length}
+                  onChange={(e) => change(o.id, e.target.value)}
+                >
+                  {ORDER_STATES.filter(
+                    (s) => s === o.status || NEXT_STATES[o.status]?.includes(s),
+                  ).map((s) => (
+                    <option key={s}>{s}</option>
+                  ))}
+                </select>
+              </>
+            ) : (
+              <p className="mb-2">
+                Estado del pedido:{" "}
+                <span className="badge text-bg-secondary">{o.status}</span>
+              </p>
+            )}
+            <Link
+              className="btn btn-sm btn-outline-dark align-self-start mb-2"
+              to={"/admin/pedidos/" + o.id}
             >
-              {ORDER_STATES.filter(
-                (s) => s === o.status || NEXT_STATES[o.status]?.includes(s),
-              ).map((s) => (
-                <option key={s}>{s}</option>
-              ))}
-            </select>
+              Ver detalle
+            </Link>
             <details>
               <summary>Ver productos y despacho</summary>
               <OrderSummary order={o} />

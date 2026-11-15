@@ -26,6 +26,8 @@ import ProductForm from "./pages/ProductForm.jsx";
 import AdminUsers from "./pages/AdminUsers.jsx";
 import UserForm from "./pages/UserForm.jsx";
 import AdminOrders from "./pages/AdminOrders.jsx";
+import AdminProductDetail from "./pages/AdminProductDetail.jsx";
+import AdminOrderDetail from "./pages/AdminOrderDetail.jsx";
 
 export const VIEW_ROUTES = [
   ["/", Home],
@@ -47,10 +49,12 @@ export const VIEW_ROUTES = [
   ["/pedidos/:id", OrderDetail, "user"],
   ["/admin", AdminDashboard, "staff"],
   ["/admin/productos", AdminProducts, "staff"],
-  ["/admin/productos/:id?/editar", ProductForm, "staff"],
+  ["/admin/productos/:id?/editar", ProductForm, "admin"],
+  ["/admin/productos/:id", AdminProductDetail, "staff"],
   ["/admin/usuarios", AdminUsers, "admin"],
   ["/admin/usuarios/:id?/editar", UserForm, "admin"],
   ["/admin/pedidos", AdminOrders, "staff"],
+  ["/admin/pedidos/:id", AdminOrderDetail, "staff"],
 ];
 function Page({ Component, access }) {
   const location = useLocation();
@@ -109,7 +113,7 @@ export default function App() {
           ))}
           <Route
             path="/admin/productos/nuevo"
-            element={<Page Component={ProductForm} access="staff" />}
+            element={<Page Component={ProductForm} access="admin" />}
           />
           <Route
             path="/admin/usuarios/nuevo"

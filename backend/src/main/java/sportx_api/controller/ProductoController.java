@@ -1,6 +1,9 @@
 
 package sportx_api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
 import jakarta.validation.Valid;
@@ -21,8 +24,9 @@ import sportx_api.dto.ProductoRequest;
 import sportx_api.dto.ProductoResponse;
 import sportx_api.service.ProductoService;
 
+@Tag(name = "Productos", description = "Catálogo de productos deportivos.")
 @RestController
-@RequestMapping("/api/productos")
+@RequestMapping("/api/v1/productos")
 public class ProductoController {
 
     private final ProductoService productoService;
@@ -33,6 +37,7 @@ public class ProductoController {
     }
 
     // GET - LISTAR PRODUCTOS
+    @Operation(summary = "Listar productos", description = "Público.")
     @GetMapping
     public ResponseEntity<List<ProductoResponse>> listar() {
 
@@ -40,6 +45,7 @@ public class ProductoController {
     }
 
     // GET - BUSCAR POR ID
+    @Operation(summary = "Detalle de un producto", description = "Público.")
     @GetMapping("/{id}")
     public ResponseEntity<ProductoResponse> buscarPorId(
             @PathVariable Long id) {
@@ -50,6 +56,7 @@ public class ProductoController {
     }
 
     // POST - CREAR PRODUCTO
+    @Operation(summary = "Crear producto", description = "Rol: Administrador.")
     @PostMapping
     public ResponseEntity<ProductoResponse> guardar(
             @Valid @RequestBody ProductoRequest datos) {
@@ -62,6 +69,7 @@ public class ProductoController {
     }
 
     // PUT - ACTUALIZAR PRODUCTO
+    @Operation(summary = "Actualizar producto", description = "Rol: Administrador.")
     @PutMapping("/{id}")
     public ResponseEntity<ProductoResponse> actualizar(
             @PathVariable Long id,
@@ -73,6 +81,7 @@ public class ProductoController {
     }
 
     // DELETE - DESACTIVAR PRODUCTO
+    @Operation(summary = "Eliminar producto", description = "Rol: Administrador.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(
             @PathVariable Long id) {

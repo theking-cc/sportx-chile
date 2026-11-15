@@ -1,5 +1,9 @@
 package sportx_api.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.net.URI;
 
 import jakarta.validation.Valid;
@@ -24,8 +28,9 @@ import sportx_api.pago.PasarelaPago;
 import sportx_api.pago.SimuladorPasarela;
 import sportx_api.service.PagoService;
 
+@Tag(name = "Pagos Webpay", description = "Pago con Transbank Webpay Plus.")
 @RestController
-@RequestMapping("/api/pagos")
+@RequestMapping("/api/v1/pagos")
 public class PagoController {
 
     private final PagoService pagoService;
@@ -37,6 +42,7 @@ public class PagoController {
     }
 
     // CLIENTE: crea la orden desde su carrito y abre la transacción Webpay
+    @Operation(summary = "Iniciar pago con Webpay Plus", description = "Rol: Cliente. Crea la orden, reserva stock y devuelve url + token de Webpay.")
     @PostMapping("/webpay/iniciar")
     public ResponseEntity<IniciarPagoResponse> iniciar(
             JwtAuthenticationToken auth,
@@ -47,6 +53,7 @@ public class PagoController {
     }
 
     // PÚBLICO: Transbank devuelve aquí al comprador (GET o POST, según el caso)
+    @Operation(summary = "Retorno desde Webpay", description = "Público (lo llama el navegador al volver de Transbank). Confirma la transacción y redirige al resultado.")
     @RequestMapping(path = "/webpay/retorno", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<Void> retorno(
             @RequestParam(name = "token_ws", required = false) String tokenWs,
@@ -58,6 +65,7 @@ public class PagoController {
     }
 
     // Solo en ambiente "simulado": página que imita el formulario de Webpay.
+    @Hidden
     @RequestMapping(path = "/simulador", method = {RequestMethod.GET, RequestMethod.POST},
             produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<String> simulador(

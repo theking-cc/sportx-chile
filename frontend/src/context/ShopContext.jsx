@@ -87,7 +87,7 @@ export function ShopProvider({ children }) {
       const [profile, ords, msgs, usrs] = await Promise.all([
         api.perfil().catch(() => null),
         rol === "Cliente" ? api.misOrdenes() : api.ordenes(),
-        rol === "Cliente" ? [] : api.mensajes(),
+        rol === "Administrador" ? api.mensajes() : [],
         rol === "Administrador" ? api.usuarios() : [],
       ]);
       if (profile)

@@ -45,75 +45,82 @@ public class SecurityConfig {
                 .dispatcherTypeMatchers(DispatcherType.ERROR)
                     .permitAll()
 
+                // DOCUMENTACIÓN SWAGGER / OPENAPI (pública, solo lectura)
+                .requestMatchers(
+                    "/swagger-ui.html",
+                    "/swagger-ui/**",
+                    "/v3/api-docs",
+                    "/v3/api-docs/**"
+                ).permitAll()
+
                 // LOGIN Y REGISTRO PÚBLICOS
                 .requestMatchers(
-                    "/api/auth/registro",
-                    "/api/auth/login",
-                    "/api/auth/google",
-                    "/api/auth/google/registro"
+                    "/api/v1/auth/registro",
+                    "/api/v1/auth/login",
+                    "/api/v1/auth/google",
+                    "/api/v1/auth/google/registro"
                 ).permitAll()
 
                 // CONSULTAR PRODUCTOS Y CATEGORÍAS
                 .requestMatchers(
                     HttpMethod.GET,
-                    "/api/productos",
-                    "/api/productos/*",
-                    "/api/categorias",
-                    "/api/categorias/*",
-                    "/api/comunas"
+                    "/api/v1/productos",
+                    "/api/v1/productos/*",
+                    "/api/v1/categorias",
+                    "/api/v1/categorias/*",
+                    "/api/v1/comunas"
                 ).permitAll()
 
                 // FORMULARIO DE CONTACTO (público)
-                .requestMatchers(HttpMethod.POST, "/api/mensajes").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/mensajes")
-                    .hasAnyRole("ADMIN", "VENDEDOR")
+                .requestMatchers(HttpMethod.POST, "/api/v1/mensajes").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/mensajes").hasRole("ADMIN")
 
                 // PAGOS WEBPAY: iniciar solo clientes; retorno y simulador son públicos
-                .requestMatchers(HttpMethod.POST, "/api/pagos/webpay/iniciar").hasRole("CLIENTE")
-                .requestMatchers("/api/pagos/webpay/retorno", "/api/pagos/simulador").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/pagos/webpay/iniciar").hasRole("CLIENTE")
+                .requestMatchers("/api/v1/pagos/webpay/retorno", "/api/v1/pagos/simulador").permitAll()
 
                 // PEDIDOS
-                .requestMatchers(HttpMethod.POST, "/api/ordenes").hasRole("CLIENTE")
-                .requestMatchers(HttpMethod.GET, "/api/ordenes/mias").hasRole("CLIENTE")
-                .requestMatchers(HttpMethod.GET, "/api/ordenes")
+                .requestMatchers(HttpMethod.POST, "/api/v1/ordenes").hasRole("CLIENTE")
+                .requestMatchers(HttpMethod.GET, "/api/v1/ordenes/mias").hasRole("CLIENTE")
+                // Vendedor: solo VER la lista de órdenes y su detalle (pauta Evaluación 3)
+                .requestMatchers(HttpMethod.GET, "/api/v1/ordenes", "/api/v1/ordenes/*")
                     .hasAnyRole("ADMIN", "VENDEDOR")
-                .requestMatchers(HttpMethod.PATCH, "/api/ordenes/*/estado")
-                    .hasAnyRole("ADMIN", "VENDEDOR")
+                .requestMatchers(HttpMethod.PATCH, "/api/v1/ordenes/*/estado").hasRole("ADMIN")
 
                 // PERFIL PROPIO (cualquier usuario autenticado)
-                .requestMatchers("/api/usuarios/me").authenticated()
+                .requestMatchers("/api/v1/usuarios/me").authenticated()
 
                 // ADMINISTRACIÓN DE USUARIOS
-                .requestMatchers("/api/usuarios", "/api/usuarios/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/usuarios", "/api/v1/usuarios/**").hasRole("ADMIN")
 
                 // CARRITO: SOLO CLIENTES
                 .requestMatchers(
-                    "/api/carrito",
-                    "/api/carrito/**"
+                    "/api/v1/carrito",
+                    "/api/v1/carrito/**"
                 ).hasRole("CLIENTE")
 
-                // CREAR PRODUCTOS
+                // CREAR Y MODIFICAR PRODUCTOS: solo Administrador
+                // (el Vendedor solo visualiza productos, que son de lectura pública)
                 .requestMatchers(
                     HttpMethod.POST,
-                    "/api/productos"
-                ).hasAnyRole("ADMIN", "VENDEDOR")
+                    "/api/v1/productos"
+                ).hasRole("ADMIN")
 
-                // MODIFICAR PRODUCTOS
                 .requestMatchers(
                     HttpMethod.PUT,
-                    "/api/productos/*"
-                ).hasAnyRole("ADMIN", "VENDEDOR")
+                    "/api/v1/productos/*"
+                ).hasRole("ADMIN")
 
                 // ELIMINAR PRODUCTOS
                 .requestMatchers(
                     HttpMethod.DELETE,
-                    "/api/productos/*"
+                    "/api/v1/productos/*"
                 ).hasRole("ADMIN")
 
                 // ADMINISTRAR CATEGORÍAS
                 .requestMatchers(
-                    "/api/categorias",
-                    "/api/categorias/**"
+                    "/api/v1/categorias",
+                    "/api/v1/categorias/**"
                 ).hasRole("ADMIN")
 
                 .anyRequest().denyAll()

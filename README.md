@@ -60,16 +60,32 @@ Con el backend activo todo se lee y guarda en MariaDB: catálogo, categorías, l
 pedidos (descuentan y reponen stock), mensajes de contacto, administración de usuarios y perfil.
 Si el backend no responde, la tienda usa los datos locales de demostración y lo indica en pantalla.
 
+La API está versionada: todas las rutas cuelgan de `/api/v1`.
+Documentación interactiva (Swagger UI): http://localhost:8080/swagger-ui.html · especificación OpenAPI: http://localhost:8080/v3/api-docs
+(en Swagger, botón **Authorize** → pega el token que devuelve `POST /api/v1/auth/login`).
+
 | Endpoint | Acceso |
 | --- | --- |
-| `POST /api/auth/login`, `POST /api/auth/registro` | público |
-| `GET /api/productos`, `/api/categorias`, `/api/comunas` | público |
-| `POST /api/mensajes` | público |
-| `/api/carrito/**`, `POST /api/ordenes`, `GET /api/ordenes/mias` | Cliente |
-| `GET /api/ordenes`, `PATCH /api/ordenes/{id}/estado`, `GET /api/mensajes` | Administrador, Vendedor |
-| `POST/PUT /api/productos` | Administrador, Vendedor |
-| `DELETE /api/productos/{id}`, `/api/categorias` (escritura), `/api/usuarios/**` | Administrador |
-| `GET/PUT /api/usuarios/me` | cualquier usuario con sesión |
+| `POST /api/v1/auth/login`, `/registro`, `/google`, `/google/registro` | público |
+| `GET /api/v1/productos`, `/api/v1/categorias`, `/api/v1/comunas` | público |
+| `POST /api/v1/mensajes` | público |
+| `/api/v1/carrito/**`, `POST /api/v1/ordenes`, `GET /api/v1/ordenes/mias`, `POST /api/v1/pagos/webpay/iniciar` | Cliente |
+| `GET /api/v1/ordenes`, `GET /api/v1/ordenes/{id}` | Administrador, Vendedor (solo lectura) |
+| `PATCH /api/v1/ordenes/{id}/estado`, `GET /api/v1/mensajes` | Administrador |
+| `POST/PUT/DELETE /api/v1/productos`, escritura de `/api/v1/categorias`, `/api/v1/usuarios/**` | Administrador |
+| `GET/PUT /api/v1/usuarios/me` | cualquier usuario con sesión |
+
+Roles en el frontend: el **Vendedor** solo ve productos y pedidos (lista y detalle), sin crear, editar ni cambiar estados;
+el **Administrador** tiene acceso total; el **Cliente** compra en la tienda.
+
+### Pruebas del backend
+
+`cd backend` y `mvnw test` (Windows: `mvnw.cmd test`). No necesitan base de datos:
+- `OrdenServiceTest`: reserva de stock, cupones, transiciones de estado y reposición de stock (Mockito).
+- `PagoServiceTest`: pago aprobado, rechazado, anulado, expirado, monto alterado y retorno repetido.
+- `SeguridadRolesTest`: matriz de permisos por rol (anónimo, Cliente, Vendedor, Administrador) con MockMvc.
+
+La prueba de contexto completo contra MariaDB se activa con la variable `SPORTX_DB_TESTS=true`.
 
 Cupones válidos en el backend: `DUOC10` (10 %) y `SPORTX2026` ($5.000).
 
@@ -94,7 +110,7 @@ El backend valida firma, emisor, audiencia, vigencia y correo verificado del tok
    mysql -u root -p sportx_db_v2 < backend/src/main/resources/db/migraciones/V3__pagos_webpay.sql
    ```
 2. **Variables del backend (`.env`):**
-   - `FRONTEND_URL=http://127.0.0.1:5173` (la URL donde abres el frontend; Transbank devuelve al comprador a `FRONTEND_URL/api/pagos/webpay/retorno`).
+   - `FRONTEND_URL=http://127.0.0.1:5173` (la URL donde abres el frontend; Transbank devuelve al comprador a `FRONTEND_URL/api/v1/pagos/webpay/retorno`).
    - `WEBPAY_AMBIENTE=integracion` (por defecto, pruebas de Transbank), `produccion` (requiere `WEBPAY_CODIGO_COMERCIO` y `WEBPAY_API_KEY` reales) o `simulado` (sin internet, para demostraciones).
 
 **Flujo:** el cliente pulsa *Pagar con Webpay* → el backend crea la orden y reserva el stock → Transbank → al volver:

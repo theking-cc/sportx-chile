@@ -1,3 +1,4 @@
+import { Navigate } from "react-router-dom";
 import { useShop } from "../context/ShopContext.jsx";
 import AdminNav from "../components/AdminNav.jsx";
 import { money } from "../data/seed.js";
@@ -5,6 +6,9 @@ import { exportDatabase } from "../services/repository.js";
 export default function AdminDashboard() {
   const { db, user, products, orders, messages, remote } = useShop();
   const critical = products.filter((p) => p.stock <= p.stockCritico);
+  // El vendedor solo tiene acceso a productos y pedidos.
+  if (user.rol !== "Administrador")
+    return <Navigate to="/admin/productos" replace />;
   function download() {
     const url = URL.createObjectURL(
       new Blob([exportDatabase(db)], { type: "application/json" }),

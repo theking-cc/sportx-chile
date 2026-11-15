@@ -1,5 +1,8 @@
 package sportx_api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
 import jakarta.validation.Valid;
@@ -21,8 +24,9 @@ import sportx_api.dto.UsuarioRequest;
 import sportx_api.dto.UsuarioResponse;
 import sportx_api.service.UsuarioService;
 
+@Tag(name = "Usuarios", description = "Perfil propio y administración de cuentas.")
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/api/v1/usuarios")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -36,11 +40,13 @@ public class UsuarioController {
     }
 
     // ---------- Perfil propio (cualquier usuario con sesión) ----------
+    @Operation(summary = "Ver mi perfil", description = "Cualquier usuario autenticado.")
     @GetMapping("/me")
     public ResponseEntity<UsuarioResponse> perfil(JwtAuthenticationToken auth) {
         return ResponseEntity.ok(usuarioService.perfil(usuarioId(auth)));
     }
 
+    @Operation(summary = "Actualizar mi perfil", description = "Cualquier usuario autenticado.")
     @PutMapping("/me")
     public ResponseEntity<UsuarioResponse> actualizarPerfil(
             JwtAuthenticationToken auth,
@@ -51,11 +57,13 @@ public class UsuarioController {
     }
 
     // ---------- Administración (solo Administrador) ----------
+    @Operation(summary = "Listar usuarios", description = "Rol: Administrador.")
     @GetMapping
     public ResponseEntity<List<UsuarioResponse>> listar() {
         return ResponseEntity.ok(usuarioService.listar());
     }
 
+    @Operation(summary = "Crear usuario", description = "Rol: Administrador.")
     @PostMapping
     public ResponseEntity<UsuarioResponse> crear(
             @Valid @RequestBody UsuarioRequest datos) {
@@ -65,6 +73,7 @@ public class UsuarioController {
             .body(usuarioService.crear(datos));
     }
 
+    @Operation(summary = "Actualizar usuario", description = "Rol: Administrador.")
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioResponse> actualizar(
             JwtAuthenticationToken auth,
@@ -75,6 +84,7 @@ public class UsuarioController {
             usuarioService.actualizar(id, datos, usuarioId(auth)));
     }
 
+    @Operation(summary = "Desactivar usuario", description = "Rol: Administrador. No borra la fila (conserva sus órdenes).")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(
             JwtAuthenticationToken auth,

@@ -5,6 +5,8 @@ export default function Navbar() {
   const { cart, user, signOut, remote } = useShop();
   // El personal con sesión del servidor no compra: no se muestra el carrito.
   const showCart = !(remote && user?.rol !== "Cliente");
+  // Vendedor (pauta Eval. 3): solo ve productos y pedidos; no se muestran otros accesos.
+  const isSeller = user?.rol === "Vendedor";
   const [open, setOpen] = useState(false);
   const links = [
     ["/", "Inicio"],
@@ -42,7 +44,13 @@ export default function Navbar() {
           className={"collapse navbar-collapse " + (open ? "show" : "")}
         >
           <div className="navbar-nav mx-auto">
-            {links.map(([url, label]) => (
+            {(isSeller
+              ? [
+                  ["/admin/productos", "Productos"],
+                  ["/admin/pedidos", "Pedidos"],
+                ]
+              : links
+            ).map(([url, label]) => (
               <NavLink
                 end={url === "/"}
                 key={url}
@@ -55,7 +63,7 @@ export default function Navbar() {
             ))}
           </div>
           <div className="d-flex flex-wrap gap-2 align-items-center">
-            {showCart && (
+            {showCart && !isSeller && (
               <Link
                 to="/carrito"
                 className="btn btn-outline-dark"
@@ -65,7 +73,17 @@ export default function Navbar() {
                 Carrito ({cart.reduce((n, p) => n + p.cantidad, 0)})
               </Link>
             )}
-            {user ? (
+            {user && isSeller ? (
+              <button
+                className="btn btn-outline-danger"
+                onClick={() => {
+                  signOut();
+                  setOpen(false);
+                }}
+              >
+                Salir
+              </button>
+            ) : user ? (
               <>
                 <Link
                   to="/perfil"

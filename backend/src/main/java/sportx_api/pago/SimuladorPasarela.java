@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Simulador local de Webpay Plus (sportx.webpay.ambiente=simulado).
  * Sirve para demostrar y probar el flujo sin conexión a Transbank: la "página
- * de pago" la entrega el propio backend en /api/pagos/simulador.
+ * de pago" la entrega el propio backend en /api/v1/pagos/simulador.
  */
 public class SimuladorPasarela implements PasarelaPago {
 
@@ -35,7 +35,7 @@ public class SimuladorPasarela implements PasarelaPago {
     public Inicio crear(String ordenCompra, String sesion, BigDecimal monto, String urlRetorno) {
         String token = "sim" + UUID.randomUUID().toString().replace("-", "");
         transacciones.put(token, new Pendiente(ordenCompra, monto, urlRetorno, null));
-        return new Inicio(urlBase + "/api/pagos/simulador", token);
+        return new Inicio(urlBase + "/api/v1/pagos/simulador", token);
     }
 
     @Override

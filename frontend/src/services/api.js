@@ -1,7 +1,8 @@
 // Cliente HTTP para el backend Spring Boot (sportx-api).
-// En desarrollo Vite redirige /api a http://localhost:8080 (ver vite.config.js).
-// Para otro servidor define VITE_API_URL, por ejemplo: VITE_API_URL=http://localhost:8080/api
-const BASE_URL = (import.meta.env?.VITE_API_URL || "/api").replace(/\/$/, "");
+// API versionada: todas las rutas cuelgan de /api/v1.
+// En desarrollo Vite redirige /api al backend (ver vite.config.js).
+// Para otro servidor define VITE_API_URL, por ejemplo: VITE_API_URL=http://localhost:8080/api/v1
+const BASE_URL = (import.meta.env?.VITE_API_URL || "/api/v1").replace(/\/$/, "");
 export const AUTH_KEY = "sportx_auth";
 
 export class ApiError extends Error {
@@ -371,6 +372,9 @@ export const api = {
   },
   async misOrdenes() {
     return (await request("/ordenes/mias")).map(toOrder);
+  },
+  async orden(id) {
+    return toOrder(await request("/ordenes/" + id));
   },
   async ordenes() {
     return (await request("/ordenes")).map(toOrder);

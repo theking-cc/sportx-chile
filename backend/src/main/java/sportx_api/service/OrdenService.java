@@ -220,6 +220,13 @@ public class OrdenService {
             .stream().map(this::convertir).toList();
     }
 
+    @Transactional(readOnly = true)
+    public OrdenResponse obtener(Long ordenId) {
+        return convertir(ordenRepository.findWithDetallesById(ordenId)
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Pedido no encontrado")));
+    }
+
     // =========================================
     // 4. CAMBIAR ESTADO (repone stock si se cancela)
     // =========================================

@@ -1,6 +1,9 @@
 
 package sportx_api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -19,8 +22,9 @@ import sportx_api.dto.CategoriaResponse;
 import sportx_api.model.Categoria;
 import sportx_api.service.CategoriaService;
 
+@Tag(name = "Categorías", description = "Categorías del catálogo.")
 @RestController
-@RequestMapping("/api/categorias")
+@RequestMapping("/api/v1/categorias")
 public class CategoriaController {
 
     private final CategoriaService categoriaService;
@@ -30,6 +34,7 @@ public class CategoriaController {
     }
 
     // GET - LISTAR CATEGORÍAS
+    @Operation(summary = "Listar categorías", description = "Público.")
     @GetMapping
     public ResponseEntity<List<CategoriaResponse>> listar() {
 
@@ -37,6 +42,7 @@ public class CategoriaController {
     }
 
     // GET - BUSCAR POR ID
+    @Operation(summary = "Detalle de una categoría", description = "Público.")
     @GetMapping("/{id}")
     public ResponseEntity<CategoriaResponse> buscarPorId(
             @PathVariable Long id) {
@@ -47,6 +53,7 @@ public class CategoriaController {
     }
 
     // POST - CREAR CATEGORÍA
+    @Operation(summary = "Crear categoría", description = "Rol: Administrador.")
     @PostMapping
     public ResponseEntity<CategoriaResponse> guardar(
             @RequestBody Categoria categoria) {
@@ -60,6 +67,7 @@ public class CategoriaController {
     }
 
     // PUT - ACTUALIZAR CATEGORÍA
+    @Operation(summary = "Actualizar categoría", description = "Rol: Administrador.")
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaResponse> actualizar(
             @PathVariable Long id,
@@ -71,6 +79,7 @@ public class CategoriaController {
     }
 
     // DELETE - DESACTIVAR CATEGORÍA
+    @Operation(summary = "Eliminar categoría", description = "Rol: Administrador.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(
             @PathVariable Long id) {

@@ -4,7 +4,8 @@ import { useShop } from "../context/ShopContext.jsx";
 import AdminNav from "../components/AdminNav.jsx";
 import { money } from "../data/seed.js";
 export default function AdminProducts() {
-  const { products, removeProduct } = useShop();
+  const { products, removeProduct, user } = useShop();
+  const isAdmin = user?.rol === "Administrador";
   const [error, setError] = useState("");
   async function remove(p) {
     if (!window.confirm("¿Eliminar " + p.nombre + "?")) return;
@@ -18,10 +19,12 @@ export default function AdminProducts() {
   return (
     <>
       <AdminNav />
-      <h1>Administración de productos</h1>
-      <Link className="btn btn-danger mb-3" to="/admin/productos/nuevo">
-        Nuevo producto
-      </Link>
+      <h1>{isAdmin ? "Administración de productos" : "Productos"}</h1>
+      {isAdmin && (
+        <Link className="btn btn-danger mb-3" to="/admin/productos/nuevo">
+          Nuevo producto
+        </Link>
+      )}
       {error && <p role="alert">{error}</p>}
       <div className="table-responsive">
         <table className="table">
@@ -51,16 +54,26 @@ export default function AdminProducts() {
                   <div className="d-flex gap-2">
                     <Link
                       className="btn btn-sm btn-outline-dark"
-                      to={"/admin/productos/" + p.id + "/editar"}
+                      to={"/admin/productos/" + p.id}
                     >
-                      Editar
+                      Ver detalle
                     </Link>
-                    <button
-                      className="btn btn-sm btn-outline-danger"
-                      onClick={() => remove(p)}
-                    >
-                      Eliminar
-                    </button>
+                    {isAdmin && (
+                      <>
+                        <Link
+                          className="btn btn-sm btn-outline-dark"
+                          to={"/admin/productos/" + p.id + "/editar"}
+                        >
+                          Editar
+                        </Link>
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => remove(p)}
+                        >
+                          Eliminar
+                        </button>
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>

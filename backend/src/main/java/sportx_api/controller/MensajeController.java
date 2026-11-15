@@ -1,5 +1,8 @@
 package sportx_api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
 import jakarta.validation.Valid;
@@ -18,8 +21,9 @@ import sportx_api.dto.MensajeRequest;
 import sportx_api.dto.MensajeResponse;
 import sportx_api.service.MensajeService;
 
+@Tag(name = "Contacto", description = "Mensajes del formulario de contacto.")
 @RestController
-@RequestMapping("/api/mensajes")
+@RequestMapping("/api/v1/mensajes")
 public class MensajeController {
 
     private final MensajeService mensajeService;
@@ -29,6 +33,7 @@ public class MensajeController {
     }
 
     // Público: formulario de contacto. Si hay sesión, se asocia al usuario.
+    @Operation(summary = "Enviar mensaje de contacto", description = "Público (si hay sesión se asocia al usuario).")
     @PostMapping
     public ResponseEntity<MensajeResponse> enviar(
             @AuthenticationPrincipal Jwt jwt,
@@ -42,6 +47,7 @@ public class MensajeController {
     }
 
     // ADMIN / VENDEDOR
+    @Operation(summary = "Listar mensajes de contacto", description = "Rol: Administrador.")
     @GetMapping
     public ResponseEntity<List<MensajeResponse>> listar() {
         return ResponseEntity.ok(mensajeService.listar());

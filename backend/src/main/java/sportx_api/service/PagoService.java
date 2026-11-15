@@ -76,7 +76,7 @@ public class PagoService {
             pago.getOrdenCompra(),
             "U" + usuarioId,
             orden.getMontoTotal(),
-            frontendUrl + "/api/pagos/webpay/retorno");
+            frontendUrl + "/api/v1/pagos/webpay/retorno");
 
         pago.setToken(inicio.token());
         pagoRepository.save(pago);
